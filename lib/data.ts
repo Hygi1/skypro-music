@@ -1,4 +1,6 @@
-export const data = [
+import { Track } from "./types";
+
+export const data: Track[] = [
   {
     _id: 8,
     name: "Chase",

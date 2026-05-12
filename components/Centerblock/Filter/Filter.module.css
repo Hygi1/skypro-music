@@ -3,6 +3,7 @@
   flex-direction: row;
   align-items: center;
   margin-bottom: 51px;
+  gap: 10px;
 }
 
 .filterTitle {
@@ -12,6 +13,10 @@
   line-height: 24px;
   margin-right: 15px;
   color: #ffffff;
+}
+
+.filterItem {
+  position: relative;
 }
 
 .filterButton {
@@ -25,6 +30,7 @@
   cursor: pointer;
   background: transparent;
   color: #ffffff;
+  transition: all 0.2s;
 }
 
 .filterButton:not(:last-child) {
@@ -36,7 +42,57 @@
   color: #d9b6ff;
 }
 
-.filterButton:active {
+.active {
   border-color: #ad61ff;
   color: #ad61ff;
+}
+
+.dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #313131;
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 10px;
+  z-index: 10;
+  width: max-content;
+  max-width: 248px;
+}
+
+.dropdownList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-height: 237px;
+  overflow-y: auto;
+}
+
+.dropdownList::-webkit-scrollbar {
+  width: 4px;
+}
+
+.dropdownList::-webkit-scrollbar-track {
+  background-color: rgba(75, 73, 73, 1);
+  border-radius: 2px;
+}
+
+.dropdownList::-webkit-scrollbar-thumb {
+  background-color: white;
+  border-radius: 2px;
+}
+
+.dropdownItem {
+  color: #ffffff;
+  font-size: 16px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.dropdownItem:hover {
+  color: #b572ff;
+  text-decoration: underline;
 }

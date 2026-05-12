@@ -1,8 +1,16 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import styles from "./Navbar.module.css";
+import cn from "classnames";
 
 export default function Navbar() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const toggleMenu = () => setIsMenuOpen((prev) => !prev);
+
   return (
     <nav className={styles.nav}>
       <div className={styles.logo}>
@@ -14,12 +22,17 @@ export default function Navbar() {
           priority
         />
       </div>
-      <div className={styles.burger}>
+      <div className={styles.burger} onClick={toggleMenu}>
         <span className={styles.burgerLine}></span>
         <span className={styles.burgerLine}></span>
         <span className={styles.burgerLine}></span>
       </div>
-      <div className={styles.menu}>
+      <div
+        className={cn(styles.menu, {
+          [styles.menuClosed]: !isMenuOpen,
+          [styles.menuOpen]: isMenuOpen,
+        })}
+      >
         <ul className={styles.menuList}>
           <li className={styles.menuItem}>
             <Link href="/" className={styles.menuLink}>
