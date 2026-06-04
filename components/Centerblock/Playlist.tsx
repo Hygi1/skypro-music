@@ -2,11 +2,15 @@
 
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/lib/store/store";
+<<<<<<< HEAD
 import {
   setPlaylist,
   setCurrentTrack,
   setPlaying,
 } from "@/lib/store/playerSlice";
+=======
+import { setCurrentTrack, setPlaying } from "@/lib/store/playerSlice";
+>>>>>>> 4a7260e7f65b68f19691a130bc542dbd4f86e5e9
 import { data } from "@/lib/data";
 import Link from "next/link";
 import styles from "./Playlist.module.css";
@@ -20,6 +24,7 @@ const formatTime = (seconds: number) => {
 
 export default function Playlist() {
   const dispatch = useDispatch();
+<<<<<<< HEAD
   const { playlist, currentTrackIndex, isPlaying } = useSelector(
     (state: RootState) => state.player
   );
@@ -32,20 +37,42 @@ export default function Playlist() {
     }
     dispatch(setCurrentTrack({ track: data[index], index }));
     dispatch(setPlaying(true));
+=======
+  const { currentTrack, isPlaying } = useSelector(
+    (state: RootState) => state.player
+  );
+
+  const handleTrackClick = (track: (typeof data)[0]) => {
+    if (currentTrack?._id === track._id) {
+      dispatch(setPlaying(!isPlaying));
+    } else {
+      dispatch(setCurrentTrack(track));
+      dispatch(setPlaying(true));
+    }
+>>>>>>> 4a7260e7f65b68f19691a130bc542dbd4f86e5e9
   };
 
   return (
     <div className={styles.playlist}>
+<<<<<<< HEAD
       {data.map((track, idx) => {
         const isCurrent =
           currentTrackIndex === idx && currentTrack?._id === track._id;
+=======
+      {data.map((track) => {
+        const isCurrent = currentTrack?._id === track._id;
+>>>>>>> 4a7260e7f65b68f19691a130bc542dbd4f86e5e9
         return (
           <div
             key={track._id}
             className={cn(styles.playlist__item, {
               [styles.playing]: isCurrent && isPlaying,
             })}
+<<<<<<< HEAD
             onClick={() => handleTrackClick(idx)}
+=======
+            onClick={() => handleTrackClick(track)}
+>>>>>>> 4a7260e7f65b68f19691a130bc542dbd4f86e5e9
           >
             <div className={styles.playlist__track}>
               <div className={styles.track__title}>

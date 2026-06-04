@@ -8,15 +8,20 @@ import {
   setDuration,
   setPlaying,
   setVolume,
+<<<<<<< HEAD
   playNext,
   playPrev,
   togglePlay,
   toggleShuffle,
   toggleRepeat,
+=======
+  togglePlay,
+>>>>>>> 4a7260e7f65b68f19691a130bc542dbd4f86e5e9
 } from "@/lib/store/playerSlice";
 import styles from "./Player.module.css";
 import Image from "next/image";
 import Link from "next/link";
+<<<<<<< HEAD
 import cn from "classnames";
 
 export default function Player() {
@@ -35,6 +40,15 @@ export default function Player() {
   const audioRef = useRef<HTMLAudioElement>(null);
   const currentTrack =
     currentTrackIndex !== null ? playlist[currentTrackIndex] : null;
+=======
+
+export default function Player() {
+  const dispatch = useDispatch();
+  const { currentTrack, isPlaying, currentTime, duration, volume } =
+    useSelector((state: RootState) => state.player);
+
+  const audioRef = useRef<HTMLAudioElement>(null);
+>>>>>>> 4a7260e7f65b68f19691a130bc542dbd4f86e5e9
 
   useEffect(() => {
     if (audioRef.current) {
@@ -80,6 +94,7 @@ export default function Player() {
     }
   };
 
+<<<<<<< HEAD
   const handleEnded = () => {
     if (repeat) {
       if (audioRef.current) {
@@ -94,6 +109,9 @@ export default function Player() {
 
   const formatTime = (seconds: number) => {
     if (isNaN(seconds)) return "0:00";
+=======
+  const formatTime = (seconds: number) => {
+>>>>>>> 4a7260e7f65b68f19691a130bc542dbd4f86e5e9
     const mins = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
     return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
@@ -119,7 +137,11 @@ export default function Player() {
         src={currentTrack.track_file}
         onTimeUpdate={handleTimeUpdate}
         onLoadedMetadata={handleLoadedMetadata}
+<<<<<<< HEAD
         onEnded={handleEnded}
+=======
+        onEnded={() => dispatch(setPlaying(false))}
+>>>>>>> 4a7260e7f65b68f19691a130bc542dbd4f86e5e9
       />
       <div className={styles.barContent}>
         <div className={styles.barPlayerProgress}>
@@ -144,11 +166,18 @@ export default function Player() {
                 <svg className={styles.playerBtnPrevSvg}>
                   <use xlinkHref="/img/icon/sprite.svg#icon-prev" />
                 </svg>
+<<<<<<< HEAD
               </button>
               <button
                 className={styles.playerBtnPlay}
                 onClick={() => dispatch(togglePlay())}
                 aria-label="Play/Pause"
+=======
+              </div>
+              <div
+                className={styles.playerBtnPlay}
+                onClick={() => dispatch(togglePlay())}
+>>>>>>> 4a7260e7f65b68f19691a130bc542dbd4f86e5e9
               >
                 {isPlaying ? (
                   <svg className={styles.playerBtnPlaySvg}>
@@ -159,12 +188,17 @@ export default function Player() {
                     <use xlinkHref="/img/icon/sprite.svg#icon-play" />
                   </svg>
                 )}
+<<<<<<< HEAD
               </button>
               <button
                 className={styles.playerBtnNext}
                 onClick={() => dispatch(playNext())}
                 aria-label="Следующий трек"
               >
+=======
+              </div>
+              <div className={styles.playerBtnNext}>
+>>>>>>> 4a7260e7f65b68f19691a130bc542dbd4f86e5e9
                 <svg className={styles.playerBtnNextSvg}>
                   <use xlinkHref="/img/icon/sprite.svg#icon-next" />
                 </svg>

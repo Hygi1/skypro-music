@@ -2,12 +2,17 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Track } from "@/lib/types";
 
 interface PlayerState {
+<<<<<<< HEAD
   playlist: Track[];
   currentTrackIndex: number | null;
+=======
+  currentTrack: Track | null;
+>>>>>>> 4a7260e7f65b68f19691a130bc542dbd4f86e5e9
   isPlaying: boolean;
   currentTime: number;
   duration: number;
   volume: number;
+<<<<<<< HEAD
   shuffle: boolean;
   repeat: boolean;
 }
@@ -15,18 +20,28 @@ interface PlayerState {
 const initialState: PlayerState = {
   playlist: [],
   currentTrackIndex: null,
+=======
+}
+
+const initialState: PlayerState = {
+  currentTrack: null,
+>>>>>>> 4a7260e7f65b68f19691a130bc542dbd4f86e5e9
   isPlaying: false,
   currentTime: 0,
   duration: 0,
   volume: 0.5,
+<<<<<<< HEAD
   shuffle: false,
   repeat: false,
+=======
+>>>>>>> 4a7260e7f65b68f19691a130bc542dbd4f86e5e9
 };
 
 const playerSlice = createSlice({
   name: "player",
   initialState,
   reducers: {
+<<<<<<< HEAD
     setPlaylist(state, action: PayloadAction<Track[]>) {
       state.playlist = action.payload;
     },
@@ -97,6 +112,15 @@ const playerSlice = createSlice({
       }
       state.currentTime = 0;
       state.duration = 0;
+=======
+    setCurrentTrack(state, action: PayloadAction<Track | null>) {
+      state.currentTrack = action.payload;
+      if (action.payload === null) {
+        state.isPlaying = false;
+        state.currentTime = 0;
+        state.duration = 0;
+      }
+>>>>>>> 4a7260e7f65b68f19691a130bc542dbd4f86e5e9
     },
     togglePlay(state) {
       state.isPlaying = !state.isPlaying;
@@ -113,27 +137,38 @@ const playerSlice = createSlice({
     setVolume(state, action: PayloadAction<number>) {
       state.volume = action.payload;
     },
+<<<<<<< HEAD
     toggleShuffle(state) {
       state.shuffle = !state.shuffle;
     },
     toggleRepeat(state) {
       state.repeat = !state.repeat;
     },
+=======
+>>>>>>> 4a7260e7f65b68f19691a130bc542dbd4f86e5e9
   },
 });
 
 export const {
+<<<<<<< HEAD
   setPlaylist,
   setCurrentTrack,
   playNext,
   playPrev,
+=======
+  setCurrentTrack,
+>>>>>>> 4a7260e7f65b68f19691a130bc542dbd4f86e5e9
   togglePlay,
   setPlaying,
   setCurrentTime,
   setDuration,
   setVolume,
+<<<<<<< HEAD
   toggleShuffle,
   toggleRepeat,
 } = playerSlice.actions;
 
+=======
+} = playerSlice.actions;
+>>>>>>> 4a7260e7f65b68f19691a130bc542dbd4f86e5e9
 export default playerSlice.reducer;
