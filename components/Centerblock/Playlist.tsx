@@ -2,7 +2,11 @@
 
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/lib/store/store";
-import { setCurrentTrack, setPlaying } from "@/lib/store/playerSlice";
+import {
+  setPlaylist,
+  setCurrentTrack,
+  setPlaying,
+} from "@/lib/store/playerSlice";
 import { data } from "@/lib/data";
 import Link from "next/link";
 import styles from "./Playlist.module.css";
@@ -16,30 +20,32 @@ const formatTime = (seconds: number) => {
 
 export default function Playlist() {
   const dispatch = useDispatch();
-  const { currentTrack, isPlaying } = useSelector(
+  const { playlist, currentTrackIndex, isPlaying } = useSelector(
     (state: RootState) => state.player
   );
+  const currentTrack =
+    currentTrackIndex !== null ? playlist[currentTrackIndex] : null;
 
-  const handleTrackClick = (track: (typeof data)[0]) => {
-    if (currentTrack?._id === track._id) {
-      dispatch(setPlaying(!isPlaying));
-    } else {
-      dispatch(setCurrentTrack(track));
-      dispatch(setPlaying(true));
+  const handleTrackClick = (index: number) => {
+    if (playlist.length !== data.length || playlist[0]?._id !== data[0]?._id) {
+      dispatch(setPlaylist(data));
     }
+    dispatch(setCurrentTrack({ track: data[index], index }));
+    dispatch(setPlaying(true));
   };
 
   return (
     <div className={styles.playlist}>
-      {data.map((track) => {
-        const isCurrent = currentTrack?._id === track._id;
+      {data.map((track, idx) => {
+        const isCurrent =
+          currentTrackIndex === idx && currentTrack?._id === track._id;
         return (
           <div
             key={track._id}
             className={cn(styles.playlist__item, {
               [styles.playing]: isCurrent && isPlaying,
             })}
-            onClick={() => handleTrackClick(track)}
+            onClick={() => handleTrackClick(idx)}
           >
             <div className={styles.playlist__track}>
               <div className={styles.track__title}>

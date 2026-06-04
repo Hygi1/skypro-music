@@ -235,3 +235,45 @@
   position: relative;
   margin-top: -7px;
 }
+.activeButton svg {
+  stroke: #b572ff;
+  fill: #b572ff;
+}
+
+.timeInfo {
+  position: absolute;
+  bottom: 10px;
+  right: 20px;
+  color: #fff;
+  font-size: 14px;
+  font-family: monospace;
+}
+.playerBtnPlaySvg,
+.playerBtnPrevSvg,
+.playerBtnNextSvg,
+.playerBtnRepeatSvg,
+.playerBtnShuffleSvg {
+  fill: #d9d9d9;
+  stroke: #d9d9d9;
+}
+
+.playerBtnPlay,
+.playerBtnPrev,
+.playerBtnNext,
+.playerBtnRepeat,
+.playerBtnShuffle {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.trackPlayLikeSvg,
+.trackPlayDislikeSvg {
+  fill: transparent;
+  stroke: #d9d9d9;
+}
+
+.volumeSvg {
+  fill: #d9d9d9;
+  stroke: #d9d9d9;
+}
