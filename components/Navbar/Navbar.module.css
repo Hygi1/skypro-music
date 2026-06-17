@@ -32,11 +32,9 @@
 .menu {
   transition: opacity 0.2s;
 }
-
 .menuClosed {
   display: none;
 }
-
 .menuOpen {
   display: block;
 }
@@ -45,12 +43,6 @@
   list-style: none;
   padding: 18px 0 10px 0;
 }
-
-.menuItem {
-  padding: 5px 0;
-  margin-bottom: 16px;
-}
-
 .menuLink {
   color: #ffffff;
   font-weight: 400;

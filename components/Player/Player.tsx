@@ -8,20 +8,15 @@ import {
   setDuration,
   setPlaying,
   setVolume,
-<<<<<<< HEAD
   playNext,
   playPrev,
   togglePlay,
   toggleShuffle,
   toggleRepeat,
-=======
-  togglePlay,
->>>>>>> 4a7260e7f65b68f19691a130bc542dbd4f86e5e9
 } from "@/lib/store/playerSlice";
 import styles from "./Player.module.css";
 import Image from "next/image";
 import Link from "next/link";
-<<<<<<< HEAD
 import cn from "classnames";
 
 export default function Player() {
@@ -36,48 +31,28 @@ export default function Player() {
     shuffle,
     repeat,
   } = useSelector((state: RootState) => state.player);
-
   const audioRef = useRef<HTMLAudioElement>(null);
   const currentTrack =
     currentTrackIndex !== null ? playlist[currentTrackIndex] : null;
-=======
-
-export default function Player() {
-  const dispatch = useDispatch();
-  const { currentTrack, isPlaying, currentTime, duration, volume } =
-    useSelector((state: RootState) => state.player);
-
-  const audioRef = useRef<HTMLAudioElement>(null);
->>>>>>> 4a7260e7f65b68f19691a130bc542dbd4f86e5e9
 
   useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.volume = volume;
-    }
+    if (audioRef.current) audioRef.current.volume = volume;
   }, [volume]);
 
   useEffect(() => {
     if (audioRef.current && currentTrack) {
-      if (isPlaying) {
-        audioRef.current.play();
-      } else {
-        audioRef.current.pause();
-      }
+      if (isPlaying) audioRef.current.play();
+      else audioRef.current.pause();
     }
   }, [isPlaying, currentTrack]);
 
   const handleTimeUpdate = () => {
-    if (audioRef.current) {
+    if (audioRef.current)
       dispatch(setCurrentTime(audioRef.current.currentTime));
-    }
   };
-
   const handleLoadedMetadata = () => {
-    if (audioRef.current) {
-      dispatch(setDuration(audioRef.current.duration));
-    }
+    if (audioRef.current) dispatch(setDuration(audioRef.current.duration));
   };
-
   const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
     const time = parseFloat(e.target.value);
     if (audioRef.current) {
@@ -85,16 +60,11 @@ export default function Player() {
       dispatch(setCurrentTime(time));
     }
   };
-
   const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const vol = parseFloat(e.target.value);
     dispatch(setVolume(vol));
-    if (audioRef.current) {
-      audioRef.current.volume = vol;
-    }
+    if (audioRef.current) audioRef.current.volume = vol;
   };
-
-<<<<<<< HEAD
   const handleEnded = () => {
     if (repeat) {
       if (audioRef.current) {
@@ -106,17 +76,12 @@ export default function Player() {
       dispatch(playNext());
     }
   };
-
   const formatTime = (seconds: number) => {
     if (isNaN(seconds)) return "0:00";
-=======
-  const formatTime = (seconds: number) => {
->>>>>>> 4a7260e7f65b68f19691a130bc542dbd4f86e5e9
     const mins = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
     return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
   };
-
   if (!currentTrack) {
     return (
       <div className={styles.bar}>
@@ -129,7 +94,6 @@ export default function Player() {
       </div>
     );
   }
-
   return (
     <div className={styles.bar}>
       <audio
@@ -137,11 +101,7 @@ export default function Player() {
         src={currentTrack.track_file}
         onTimeUpdate={handleTimeUpdate}
         onLoadedMetadata={handleLoadedMetadata}
-<<<<<<< HEAD
         onEnded={handleEnded}
-=======
-        onEnded={() => dispatch(setPlaying(false))}
->>>>>>> 4a7260e7f65b68f19691a130bc542dbd4f86e5e9
       />
       <div className={styles.barContent}>
         <div className={styles.barPlayerProgress}>
@@ -164,43 +124,31 @@ export default function Player() {
                 aria-label="Предыдущий трек"
               >
                 <svg className={styles.playerBtnPrevSvg}>
-                  <use xlinkHref="/img/icon/sprite.svg#icon-prev" />
+                  <use href="/img/icon/sprite.svg#icon-prev" />
                 </svg>
-<<<<<<< HEAD
               </button>
               <button
                 className={styles.playerBtnPlay}
                 onClick={() => dispatch(togglePlay())}
-                aria-label="Play/Pause"
-=======
-              </div>
-              <div
-                className={styles.playerBtnPlay}
-                onClick={() => dispatch(togglePlay())}
->>>>>>> 4a7260e7f65b68f19691a130bc542dbd4f86e5e9
+                aria-label="Воспроизведение/Пауза"
               >
                 {isPlaying ? (
                   <svg className={styles.playerBtnPlaySvg}>
-                    <use xlinkHref="/img/icon/sprite.svg#icon-pause" />
+                    <use href="/img/icon/sprite.svg#icon-pause" />
                   </svg>
                 ) : (
                   <svg className={styles.playerBtnPlaySvg}>
-                    <use xlinkHref="/img/icon/sprite.svg#icon-play" />
+                    <use href="/img/icon/sprite.svg#icon-play" />
                   </svg>
                 )}
-<<<<<<< HEAD
               </button>
               <button
                 className={styles.playerBtnNext}
                 onClick={() => dispatch(playNext())}
                 aria-label="Следующий трек"
               >
-=======
-              </div>
-              <div className={styles.playerBtnNext}>
->>>>>>> 4a7260e7f65b68f19691a130bc542dbd4f86e5e9
                 <svg className={styles.playerBtnNextSvg}>
-                  <use xlinkHref="/img/icon/sprite.svg#icon-next" />
+                  <use href="/img/icon/sprite.svg#icon-next" />
                 </svg>
               </button>
               <button
@@ -211,7 +159,7 @@ export default function Player() {
                 aria-label="Повтор"
               >
                 <svg className={styles.playerBtnRepeatSvg}>
-                  <use xlinkHref="/img/icon/sprite.svg#icon-repeat" />
+                  <use href="/img/icon/sprite.svg#icon-repeat" />
                 </svg>
               </button>
               <button
@@ -219,10 +167,10 @@ export default function Player() {
                   [styles.activeButton]: shuffle,
                 })}
                 onClick={() => dispatch(toggleShuffle())}
-                aria-label="Перемешать"
+                aria-label="Перемешивание"
               >
                 <svg className={styles.playerBtnShuffleSvg}>
-                  <use xlinkHref="/img/icon/sprite.svg#icon-shuffle" />
+                  <use href="/img/icon/sprite.svg#icon-shuffle" />
                 </svg>
               </button>
             </div>
@@ -238,7 +186,7 @@ export default function Player() {
                     />
                   ) : (
                     <svg className={styles.trackPlaySvg}>
-                      <use xlinkHref="/img/icon/sprite.svg#icon-note" />
+                      <use href="/img/icon/sprite.svg#icon-note" />
                     </svg>
                   )}
                 </div>
@@ -256,12 +204,12 @@ export default function Player() {
               <div className={styles.trackPlayLikeDis}>
                 <div className={styles.trackPlayLike}>
                   <svg className={styles.trackPlayLikeSvg}>
-                    <use xlinkHref="/img/icon/sprite.svg#icon-like" />
+                    <use href="/img/icon/sprite.svg#icon-like" />
                   </svg>
                 </div>
                 <div className={styles.trackPlayDislike}>
                   <svg className={styles.trackPlayDislikeSvg}>
-                    <use xlinkHref="/img/icon/sprite.svg#icon-dislike" />
+                    <use href="/img/icon/sprite.svg#icon-dislike" />
                   </svg>
                 </div>
               </div>
@@ -271,7 +219,7 @@ export default function Player() {
             <div className={styles.volumeContent}>
               <div className={styles.volumeImage}>
                 <svg className={styles.volumeSvg}>
-                  <use xlinkHref="/img/icon/sprite.svg#icon-volume" />
+                  <use href="/img/icon/sprite.svg#icon-volume" />
                 </svg>
               </div>
               <div className={styles.volumeProgress}>

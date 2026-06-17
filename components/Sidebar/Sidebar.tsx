@@ -1,13 +1,29 @@
+"use client";
+
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/lib/store/store";
+import { logout } from "@/lib/store/authSlice";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import styles from "./Sidebar.module.css";
 
 export default function Sidebar() {
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const user = useSelector((state: RootState) => state.auth.user);
+  const username = user?.username || "Гость";
+
+  const handleLogout = () => {
+    dispatch(logout());
+    router.push("/signin");
+  };
+
   return (
     <div className={styles.sidebar}>
       <div className={styles.personal}>
-        <p className={styles.personalName}>Sergey.Ivanov</p>
-        <div className={styles.icon}>
+        <p className={styles.personalName}>{username}</p>
+        <div className={styles.icon} onClick={handleLogout}>
           <svg
             width="20"
             height="20"

@@ -3,27 +3,25 @@
   flex-direction: column;
   overflow-y: auto;
 }
-
 .playlist__item {
   width: 100%;
-  display: block;
   margin-bottom: 12px;
+  cursor: pointer;
 }
-
+.playing {
+  background-color: rgba(89, 89, 89, 0.2);
+  border-radius: 8px;
+}
 .playlist__track {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
 }
-
 .track__title {
   display: flex;
-  flex-direction: row;
   align-items: center;
   width: 447px;
 }
-
 .track__titleImage {
   width: 51px;
   height: 51px;
@@ -34,83 +32,12 @@
   justify-content: center;
   margin-right: 17px;
 }
-
 .track__titleSvg {
   width: 18px;
   height: 17px;
   fill: transparent;
   stroke: #4e4e4e;
 }
-
-.track__titleLink {
-  font-style: normal;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 24px;
-  color: #ffffff;
-  text-decoration: none;
-}
-
-.track__titleLink:hover {
-  text-decoration: underline;
-}
-
-.track__author {
-  width: 321px;
-  display: flex;
-  justify-content: flex-start;
-}
-
-.track__authorLink {
-  font-style: normal;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 24px;
-  color: #ffffff;
-  text-align: left;
-  text-decoration: none;
-}
-
-.track__album {
-  width: 245px;
-}
-
-.track__albumLink {
-  font-style: normal;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 24px;
-  color: #696969;
-  text-decoration: none;
-}
-
-.track__time {
-  display: flex;
-  align-items: center;
-  gap: 17px;
-}
-
-.track__timeSvg {
-  width: 14px;
-  height: 12px;
-  fill: transparent;
-  stroke: #696969;
-  cursor: pointer;
-}
-
-.track__timeText {
-  font-style: normal;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 24px;
-  text-align: right;
-  color: #696969;
-}
-.playing {
-  background-color: rgba(89, 89, 89, 0.2);
-  border-radius: 8px;
-}
-
 .pulsingDot {
   width: 18px;
   height: 18px;
@@ -118,7 +45,6 @@
   border-radius: 50%;
   animation: pulse 1.2s infinite ease-in-out;
 }
-
 @keyframes pulse {
   0% {
     opacity: 0.3;
@@ -133,28 +59,40 @@
     transform: scale(0.8);
   }
 }
-.barPlayerProgress {
-  width: 100%;
-  height: 5px;
-  background: #2e2e2e;
-  position: relative;
+.track__titleLink {
+  font-size: 16px;
+  color: #ffffff;
+  text-decoration: none;
 }
-
-.progressLine {
-  width: 100%;
-  height: 5px;
-  background: #b572ff;
-  -webkit-appearance: none;
-  appearance: none;
-  outline: none;
-  cursor: pointer;
+.track__author {
+  width: 321px;
 }
-
-.progressLine::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 12px;
+.track__authorLink {
+  font-size: 16px;
+  color: #ffffff;
+  text-decoration: none;
+}
+.track__album {
+  width: 245px;
+}
+.track__albumLink {
+  font-size: 16px;
+  color: #696969;
+  text-decoration: none;
+}
+.track__time {
+  display: flex;
+  align-items: center;
+  gap: 17px;
+}
+.track__timeSvg {
+  width: 14px;
   height: 12px;
-  background: white;
-  border-radius: 50%;
+  fill: transparent;
+  stroke: #696969;
   cursor: pointer;
+}
+.track__timeText {
+  font-size: 16px;
+  color: #696969;
 }

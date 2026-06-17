@@ -38,42 +38,32 @@
 
 .modal__input {
   width: 100%;
-  border-top: none;
-  border-left: none;
-  border-right: none;
+  border: none;
   border-bottom: 1px solid #d0cece;
   padding: 8px 1px;
   margin-bottom: 30px;
+  outline: none;
 }
 
 .modal__input::placeholder {
-  font-style: normal;
-  font-weight: 400;
   font-size: 18px;
-  line-height: 24px;
   color: #d0cece;
 }
 
 .modal__btnSignupEnt {
   width: 278px;
-  height: 62px;
+  height: 52px;
   background-color: #580ea2;
   border-radius: 6px;
   border: none;
   margin-top: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   color: #ffffff;
   font-size: 18px;
-  font-weight: 400;
   cursor: pointer;
 }
 
 .errorContainer {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  font-size: 12px;
   color: red;
+  font-size: 12px;
+  margin-top: 5px;
 }

@@ -8,7 +8,6 @@ import cn from "classnames";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
 
   return (
@@ -22,7 +21,7 @@ export default function Navbar() {
           priority
         />
       </div>
-      <div className={styles.burger} onClick={toggleMenu}>
+      <div className={styles.burger} onClick={toggleMenu} aria-label="Меню">
         <span className={styles.burgerLine}></span>
         <span className={styles.burgerLine}></span>
         <span className={styles.burgerLine}></span>

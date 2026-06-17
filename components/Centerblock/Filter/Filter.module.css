@@ -1,56 +1,40 @@
 .filter {
   display: flex;
-  flex-direction: row;
   align-items: center;
   margin-bottom: 51px;
   gap: 10px;
   flex-wrap: wrap;
 }
-
 .filterTitle {
-  font-style: normal;
-  font-weight: 400;
   font-size: 16px;
-  line-height: 24px;
-  margin-right: 15px;
   color: #ffffff;
   white-space: nowrap;
 }
-
 .filterItem {
   position: relative;
   width: 140px;
 }
-
 .filterButton {
-  font-style: normal;
-  font-weight: 400;
+  width: 100%;
+  text-align: center;
   font-size: 16px;
-  line-height: 24px;
   border: 1px solid #ffffff;
   border-radius: 60px;
   padding: 6px 10px;
-  cursor: pointer;
   background: transparent;
   color: #ffffff;
-  transition: all 0.2s;
-  width: 100%;
-  text-align: center;
+  cursor: pointer;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  transition: all 0.2s;
 }
-
 .filterButton:hover {
   border-color: #d9b6ff;
   color: #d9b6ff;
 }
-
 .active {
   border-color: #ad61ff;
   color: #ad61ff;
 }
-
 .dropdown {
   position: absolute;
   top: 100%;
@@ -64,7 +48,6 @@
   width: max-content;
   max-width: 248px;
 }
-
 .dropdownList {
   list-style: none;
   padding: 0;
@@ -75,28 +58,23 @@
   max-height: 237px;
   overflow-y: auto;
 }
-
 .dropdownList::-webkit-scrollbar {
   width: 4px;
 }
-
 .dropdownList::-webkit-scrollbar-track {
   background-color: rgba(75, 73, 73, 1);
   border-radius: 2px;
 }
-
 .dropdownList::-webkit-scrollbar-thumb {
   background-color: white;
   border-radius: 2px;
 }
-
 .dropdownItem {
   color: #ffffff;
   font-size: 16px;
   cursor: pointer;
   white-space: nowrap;
 }
-
 .dropdownItem:hover {
   color: #b572ff;
   text-decoration: underline;

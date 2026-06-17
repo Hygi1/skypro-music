@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Track } from "@/lib/types";
+import { Track } from "@/lib/types/api";
 
 interface PlayerState {
   playlist: Track[];
@@ -43,9 +43,7 @@ const playerSlice = createSlice({
       if (state.currentTrackIndex === null) {
         state.currentTrackIndex = 0;
       } else {
-        if (state.repeat && state.currentTrackIndex !== null) {
-          return;
-        }
+        if (state.repeat && state.currentTrackIndex !== null) return;
         if (state.shuffle) {
           let newIndex = state.currentTrackIndex;
           while (
