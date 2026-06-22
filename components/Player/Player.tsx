@@ -31,6 +31,7 @@ export default function Player() {
     shuffle,
     repeat,
   } = useSelector((state: RootState) => state.player);
+
   const audioRef = useRef<HTMLAudioElement>(null);
   const currentTrack =
     currentTrackIndex !== null ? playlist[currentTrackIndex] : null;
@@ -82,6 +83,7 @@ export default function Player() {
     const secs = Math.floor(seconds % 60);
     return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
   };
+
   if (!currentTrack) {
     return (
       <div className={styles.bar}>
@@ -94,6 +96,7 @@ export default function Player() {
       </div>
     );
   }
+
   return (
     <div className={styles.bar}>
       <audio
@@ -114,7 +117,12 @@ export default function Player() {
             className={styles.progressLine}
             aria-label="Прогресс трека"
           />
+          <div className={styles.timeInfo}>
+            <span>{formatTime(currentTime)}</span> /{" "}
+            <span>{formatTime(duration)}</span>
+          </div>
         </div>
+
         <div className={styles.barPlayerBlock}>
           <div className={styles.barPlayer}>
             <div className={styles.playerControls}>
@@ -123,7 +131,7 @@ export default function Player() {
                 onClick={() => dispatch(playPrev())}
                 aria-label="Предыдущий трек"
               >
-                <svg className={styles.playerBtnPrevSvg}>
+                <svg className={styles.playerBtnPrevSvg} viewBox="0 0 15 14">
                   <use href="/img/icon/sprite.svg#icon-prev" />
                 </svg>
               </button>
@@ -133,11 +141,11 @@ export default function Player() {
                 aria-label="Воспроизведение/Пауза"
               >
                 {isPlaying ? (
-                  <svg className={styles.playerBtnPlaySvg}>
+                  <svg className={styles.playerBtnPlaySvg} viewBox="0 0 16 20">
                     <use href="/img/icon/sprite.svg#icon-pause" />
                   </svg>
                 ) : (
-                  <svg className={styles.playerBtnPlaySvg}>
+                  <svg className={styles.playerBtnPlaySvg} viewBox="0 0 22 20">
                     <use href="/img/icon/sprite.svg#icon-play" />
                   </svg>
                 )}
@@ -147,7 +155,7 @@ export default function Player() {
                 onClick={() => dispatch(playNext())}
                 aria-label="Следующий трек"
               >
-                <svg className={styles.playerBtnNextSvg}>
+                <svg className={styles.playerBtnNextSvg} viewBox="0 0 15 14">
                   <use href="/img/icon/sprite.svg#icon-next" />
                 </svg>
               </button>
@@ -158,7 +166,7 @@ export default function Player() {
                 onClick={() => dispatch(toggleRepeat())}
                 aria-label="Повтор"
               >
-                <svg className={styles.playerBtnRepeatSvg}>
+                <svg className={styles.playerBtnRepeatSvg} viewBox="0 0 18 12">
                   <use href="/img/icon/sprite.svg#icon-repeat" />
                 </svg>
               </button>
@@ -169,11 +177,12 @@ export default function Player() {
                 onClick={() => dispatch(toggleShuffle())}
                 aria-label="Перемешивание"
               >
-                <svg className={styles.playerBtnShuffleSvg}>
+                <svg className={styles.playerBtnShuffleSvg} viewBox="0 0 19 12">
                   <use href="/img/icon/sprite.svg#icon-shuffle" />
                 </svg>
               </button>
             </div>
+
             <div className={styles.playerTrackPlay}>
               <div className={styles.trackPlayContain}>
                 <div className={styles.trackPlayImage}>
@@ -185,7 +194,7 @@ export default function Player() {
                       height={51}
                     />
                   ) : (
-                    <svg className={styles.trackPlaySvg}>
+                    <svg className={styles.trackPlaySvg} viewBox="0 0 18 17">
                       <use href="/img/icon/sprite.svg#icon-note" />
                     </svg>
                   )}
@@ -203,22 +212,26 @@ export default function Player() {
               </div>
               <div className={styles.trackPlayLikeDis}>
                 <div className={styles.trackPlayLike}>
-                  <svg className={styles.trackPlayLikeSvg}>
+                  <svg className={styles.trackPlayLikeSvg} viewBox="0 0 14 12">
                     <use href="/img/icon/sprite.svg#icon-like" />
                   </svg>
                 </div>
                 <div className={styles.trackPlayDislike}>
-                  <svg className={styles.trackPlayDislikeSvg}>
+                  <svg
+                    className={styles.trackPlayDislikeSvg}
+                    viewBox="0 0 14 12"
+                  >
                     <use href="/img/icon/sprite.svg#icon-dislike" />
                   </svg>
                 </div>
               </div>
             </div>
           </div>
+
           <div className={styles.barVolumeBlock}>
             <div className={styles.volumeContent}>
               <div className={styles.volumeImage}>
-                <svg className={styles.volumeSvg}>
+                <svg className={styles.volumeSvg} viewBox="0 0 13 18">
                   <use href="/img/icon/sprite.svg#icon-volume" />
                 </svg>
               </div>
@@ -236,10 +249,6 @@ export default function Player() {
               </div>
             </div>
           </div>
-        </div>
-        <div className={styles.timeInfo}>
-          <span>{formatTime(currentTime)}</span> /{" "}
-          <span>{formatTime(duration)}</span>
         </div>
       </div>
     </div>

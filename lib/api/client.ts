@@ -18,42 +18,58 @@ async function request(endpoint: string, options: RequestInit = {}) {
     headers["Authorization"] = `Bearer ${accessToken}`;
   }
 
-  const response = await fetch(url, { ...options, headers });
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 10000);
 
-  if (response.status === 401) {
-    const refreshToken = store.getState().auth.refreshToken;
-    if (refreshToken) {
-      const refreshResponse = await fetch(`${BASE_URL}/user/token/refresh/`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ refresh: refreshToken }),
-      });
-      if (refreshResponse.ok) {
-        const { access } = await refreshResponse.json();
-        store.dispatch(updateAccessToken(access));
-        headers["Authorization"] = `Bearer ${access}`;
-        const retryResponse = await fetch(url, { ...options, headers });
-        if (!retryResponse.ok) {
-          const error = await retryResponse.json();
-          throw new Error(error.message || "Request failed");
+  try {
+    const response = await fetch(url, {
+      ...options,
+      headers,
+      signal: controller.signal,
+    });
+    clearTimeout(timeoutId);
+
+    if (response.status === 401) {
+      const refreshToken = store.getState().auth.refreshToken;
+      if (refreshToken) {
+        const refreshResponse = await fetch(`${BASE_URL}/user/token/refresh/`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ refresh: refreshToken }),
+        });
+        if (refreshResponse.ok) {
+          const { access } = await refreshResponse.json();
+          store.dispatch(updateAccessToken(access));
+          headers["Authorization"] = `Bearer ${access}`;
+          const retryResponse = await fetch(url, { ...options, headers });
+          if (!retryResponse.ok) {
+            const error = await retryResponse.json();
+            throw new Error(error.message || "Request failed");
+          }
+          return retryResponse.json();
+        } else {
+          store.dispatch(logout());
+          throw new Error("Сессия истекла, войдите заново");
         }
-        return retryResponse.json();
       } else {
         store.dispatch(logout());
-        throw new Error("Сессия истекла, войдите заново");
+        throw new Error("Не авторизован");
       }
-    } else {
-      store.dispatch(logout());
-      throw new Error("Не авторизован");
     }
-  }
 
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.message || error.detail || "Ошибка запроса");
-  }
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || error.detail || "Ошибка запроса");
+    }
 
-  return response.json();
+    return response.json();
+  } catch (err: any) {
+    clearTimeout(timeoutId);
+    if (err.name === "AbortError") {
+      throw new Error("Сервер не отвечает, попробуйте позже");
+    }
+    throw err;
+  }
 }
 
 export default {
