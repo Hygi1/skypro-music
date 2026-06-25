@@ -61,21 +61,22 @@ export default function Sidebar() {
       <div className={styles.block}>
         <div className={styles.list}>
           <div className={styles.item}>
-            <Link href="#" className={styles.link}>
+            <Link href="/selection/1" className={styles.link}>
               <Image
                 src="/img/playlist01.png"
-                alt="day's playlist"
+                alt="Плейлист дня"
                 width={250}
                 height={150}
                 className={styles.img}
+                priority
               />
             </Link>
           </div>
           <div className={styles.item}>
-            <Link href="#" className={styles.link}>
+            <Link href="/selection/2" className={styles.link}>
               <Image
                 src="/img/playlist02.png"
-                alt="day's playlist"
+                alt="Плейлист 2"
                 width={250}
                 height={150}
                 className={styles.img}
@@ -83,10 +84,10 @@ export default function Sidebar() {
             </Link>
           </div>
           <div className={styles.item}>
-            <Link href="#" className={styles.link}>
+            <Link href="/selection/3" className={styles.link}>
               <Image
                 src="/img/playlist03.png"
-                alt="day's playlist"
+                alt="Плейлист 3"
                 width={250}
                 height={150}
                 className={styles.img}

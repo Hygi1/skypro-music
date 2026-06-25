@@ -36,7 +36,9 @@ export default function Playlist({ tracks: propTracks }: PlaylistProps) {
 
   const handleTrackClick = (index: number) => {
     if (!playlist.length) return;
-    if (propTracks) dispatch(setPlaylist(propTracks));
+    if (propTracks) {
+      dispatch(setPlaylist(propTracks));
+    }
     dispatch(setCurrentTrack({ track: playlist[index], index }));
     dispatch(setPlaying(true));
   };
@@ -63,7 +65,7 @@ export default function Playlist({ tracks: propTracks }: PlaylistProps) {
                     <div className={styles.pulsingDot}></div>
                   ) : (
                     <svg className={styles.track__titleSvg}>
-                      <use xlinkHref="/img/icon/sprite.svg#icon-note" />
+                      <use href="/img/icon/sprite.svg#icon-note" />
                     </svg>
                   )}
                 </div>
@@ -85,7 +87,7 @@ export default function Playlist({ tracks: propTracks }: PlaylistProps) {
               </div>
               <div className={styles.track__time}>
                 <svg className={styles.track__timeSvg}>
-                  <use xlinkHref="/img/icon/sprite.svg#icon-like" />
+                  <use href="/img/icon/sprite.svg#icon-like" />
                 </svg>
                 <span className={styles.track__timeText}>
                   {formatTime(track.duration_in_seconds)}
