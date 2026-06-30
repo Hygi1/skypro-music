@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { getSelectionById } from "@/lib/api/catalog";
 import { Track } from "@/lib/types/api";
 import Playlist from "@/components/Centerblock/Playlist";
 import styles from "./page.module.css";
@@ -9,12 +10,12 @@ const MOCK_SELECTIONS: Record<number, Track[]> = {
   1: [
     {
       _id: 101,
-      name: "Mock Track 1",
-      author: "Mock Artist",
+      name: "Подборка 1 – Трек 1",
+      author: "Artist 1",
       release_date: "2024-01-01",
-      genre: ["Mock"],
+      genre: ["Pop"],
       duration_in_seconds: 180,
-      album: "Mock Album",
+      album: "Album 1",
       logo: null,
       track_file:
         "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
@@ -22,12 +23,12 @@ const MOCK_SELECTIONS: Record<number, Track[]> = {
     },
     {
       _id: 102,
-      name: "Mock Track 2",
-      author: "Mock Artist 2",
+      name: "Подборка 1 – Трек 2",
+      author: "Artist 2",
       release_date: "2024-02-01",
-      genre: ["Mock"],
+      genre: ["Rock"],
       duration_in_seconds: 200,
-      album: "Mock Album 2",
+      album: "Album 2",
       logo: null,
       track_file:
         "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
@@ -37,12 +38,12 @@ const MOCK_SELECTIONS: Record<number, Track[]> = {
   2: [
     {
       _id: 201,
-      name: "Mock Track 3",
-      author: "Mock Artist 3",
+      name: "Подборка 2 – Трек 1",
+      author: "Artist 3",
       release_date: "2024-03-01",
-      genre: ["Mock"],
+      genre: ["Jazz"],
       duration_in_seconds: 150,
-      album: "Mock Album 3",
+      album: "Album 3",
       logo: null,
       track_file:
         "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
@@ -52,12 +53,12 @@ const MOCK_SELECTIONS: Record<number, Track[]> = {
   3: [
     {
       _id: 301,
-      name: "Mock Track 4",
-      author: "Mock Artist 4",
+      name: "Подборка 3 – Трек 1",
+      author: "Artist 4",
       release_date: "2024-04-01",
-      genre: ["Mock"],
+      genre: ["Electronic"],
       duration_in_seconds: 220,
-      album: "Mock Album 4",
+      album: "Album 4",
       logo: null,
       track_file:
         "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3",
@@ -69,19 +70,47 @@ const MOCK_SELECTIONS: Record<number, Track[]> = {
 export default function SelectionPage({ params }: { params: { id: string } }) {
   const [tracks, setTracks] = useState<Track[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    const mockTracks = MOCK_SELECTIONS[Number(params.id)];
-    setTracks(mockTracks || []);
-    setLoading(false);
+    const fetchSelection = async () => {
+      try {
+        const data = await getSelectionById(Number(params.id));
+        if (data?.tracks?.length) {
+          setTracks(data.tracks);
+        } else {
+          const mock = MOCK_SELECTIONS[Number(params.id)];
+          if (mock) {
+            setTracks(mock);
+            setError("API не вернул треки, показаны тестовые");
+          } else {
+            setError("Подборка не найдена");
+          }
+        }
+      } catch (err: any) {
+        console.error("Ошибка подборки:", err);
+        const mock = MOCK_SELECTIONS[Number(params.id)];
+        if (mock) {
+          setTracks(mock);
+          setError(err.message || "Ошибка API, показаны тестовые");
+        } else {
+          setError(err.message || "Не удалось загрузить подборку");
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchSelection();
   }, [params.id]);
 
   if (loading) return <div>Загрузка подборки...</div>;
-  if (!tracks.length) return <div>Подборка не найдена</div>;
+  if (error && !tracks.length)
+    return <div className={styles.error}>Ошибка: {error}</div>;
 
   return (
     <div className={styles.selection}>
       <h1 className={styles.title}>Подборка #{params.id}</h1>
+      {error && <div className={styles.warning}>{error}</div>}
       <Playlist tracks={tracks} />
     </div>
   );

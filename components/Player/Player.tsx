@@ -42,8 +42,11 @@ export default function Player() {
 
   useEffect(() => {
     if (audioRef.current && currentTrack) {
-      if (isPlaying) audioRef.current.play();
-      else audioRef.current.pause();
+      if (isPlaying) {
+        audioRef.current.play().catch((e) => console.error("Play error:", e));
+      } else {
+        audioRef.current.pause();
+      }
     }
   }, [isPlaying, currentTrack]);
 
@@ -51,9 +54,11 @@ export default function Player() {
     if (audioRef.current)
       dispatch(setCurrentTime(audioRef.current.currentTime));
   };
+
   const handleLoadedMetadata = () => {
     if (audioRef.current) dispatch(setDuration(audioRef.current.duration));
   };
+
   const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
     const time = parseFloat(e.target.value);
     if (audioRef.current) {
@@ -61,22 +66,27 @@ export default function Player() {
       dispatch(setCurrentTime(time));
     }
   };
+
   const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const vol = parseFloat(e.target.value);
     dispatch(setVolume(vol));
     if (audioRef.current) audioRef.current.volume = vol;
   };
+
   const handleEnded = () => {
     if (repeat) {
       if (audioRef.current) {
         audioRef.current.currentTime = 0;
-        audioRef.current.play();
+        audioRef.current
+          .play()
+          .catch((e) => console.error("Repeat play error:", e));
         dispatch(setCurrentTime(0));
       }
     } else {
       dispatch(playNext());
     }
   };
+
   const formatTime = (seconds: number) => {
     if (isNaN(seconds)) return "0:00";
     const mins = Math.floor(seconds / 60);
@@ -97,6 +107,12 @@ export default function Player() {
     );
   }
 
+  const coverSrc =
+    typeof currentTrack.logo === "string" &&
+    currentTrack.logo.startsWith("http")
+      ? currentTrack.logo
+      : null;
+
   return (
     <div className={styles.bar}>
       <audio
@@ -105,6 +121,7 @@ export default function Player() {
         onTimeUpdate={handleTimeUpdate}
         onLoadedMetadata={handleLoadedMetadata}
         onEnded={handleEnded}
+        onError={(e) => console.error("Audio error:", e)}
       />
       <div className={styles.barContent}>
         <div className={styles.barPlayerProgress}>
@@ -186,13 +203,8 @@ export default function Player() {
             <div className={styles.playerTrackPlay}>
               <div className={styles.trackPlayContain}>
                 <div className={styles.trackPlayImage}>
-                  {currentTrack.logo ? (
-                    <Image
-                      src={currentTrack.logo}
-                      alt="track"
-                      width={51}
-                      height={51}
-                    />
+                  {coverSrc ? (
+                    <Image src={coverSrc} alt="track" width={51} height={51} />
                   ) : (
                     <svg className={styles.trackPlaySvg} viewBox="0 0 18 17">
                       <use href="/img/icon/sprite.svg#icon-note" />
