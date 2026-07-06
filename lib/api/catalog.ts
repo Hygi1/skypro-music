@@ -26,12 +26,12 @@ export const getAllSelections = () => api.get("/catalog/selection/all");
 
 export const getSelectionById = async (id: number) => {
   const response = await api.get(`/catalog/selection/${id}/`);
-  if (response && response.tracks && Array.isArray(response.tracks)) {
+  if (response && response.data) {
+    return response.data;
+  }
+  if (response && response._id && response.items) {
     return response;
   }
-  if (response && response.data && Array.isArray(response.data)) {
-    return { tracks: response.data };
-  }
   console.warn("Неизвестный формат подборки:", response);
-  return { tracks: [] };
+  return null;
 };

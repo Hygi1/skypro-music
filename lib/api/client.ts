@@ -44,16 +44,24 @@ async function request(endpoint: string, options: RequestInit = {}) {
           const retryResponse = await fetch(url, { ...options, headers });
           if (!retryResponse.ok) {
             const error = await retryResponse.json();
-            throw new Error(error.message || "Request failed");
+            throw new Error(error.message || error.detail || "Request failed");
           }
           return retryResponse.json();
         } else {
           store.dispatch(logout());
-          throw new Error("Сессия истекла, войдите заново");
+          const errorData = await refreshResponse.json();
+          throw new Error(
+            errorData.message ||
+              errorData.detail ||
+              "Сессия истекла, войдите заново"
+          );
         }
       } else {
         store.dispatch(logout());
-        throw new Error("Не авторизован");
+        const errorData = await response.json();
+        throw new Error(
+          errorData.message || errorData.detail || "Не авторизован"
+        );
       }
     }
 
