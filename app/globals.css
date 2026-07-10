@@ -30,6 +30,7 @@ body {
   flex-wrap: wrap;
   justify-content: space-between;
 }
+
 .authContainer {
   width: 100%;
   height: 100vh;

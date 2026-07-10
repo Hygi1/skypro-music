@@ -8,7 +8,7 @@ export const getAllTracks = async () => {
   if (Array.isArray(response)) {
     return response;
   }
-  console.warn("Неизвестный формат ответа:", response);
+  console.warn("Неизвестный формат ответа треков:", response);
   return [];
 };
 
@@ -29,9 +29,6 @@ export const getSelectionById = async (id: number) => {
   if (response && response.data) {
     return response.data;
   }
-  if (response && response._id && response.items) {
-    return response;
-  }
-  console.warn("Неизвестный формат подборки:", response);
+
   return null;
 };

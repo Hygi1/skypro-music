@@ -2,11 +2,13 @@
   padding: 20px 40px;
   flex: 1;
 }
+
 .title {
   color: #fff;
   font-size: 32px;
   margin-bottom: 20px;
 }
+
 .error {
   color: red;
   text-align: center;
