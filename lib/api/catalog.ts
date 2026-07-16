@@ -29,6 +29,5 @@ export const getSelectionById = async (id: number) => {
   if (response && response.data) {
     return response.data;
   }
-
   return null;
 };

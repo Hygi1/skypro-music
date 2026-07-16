@@ -39,8 +39,8 @@ export default function Navbar() {
             </Link>
           </li>
           <li className={styles.menuItem}>
-            <Link href="/" className={styles.menuLink}>
-              Мой плейлист
+            <Link href="/favorites" className={styles.menuLink}>
+              Избранное
             </Link>
           </li>
           <li className={styles.menuItem}>

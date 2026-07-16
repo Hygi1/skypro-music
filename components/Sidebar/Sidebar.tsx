@@ -94,6 +94,11 @@ export default function Sidebar() {
               />
             </Link>
           </div>
+          <div className={styles.item}>
+            <Link href="/favorites" className={styles.link}>
+              <div className={styles.favoritesLink}>⭐ Избранное</div>
+            </Link>
+          </div>
         </div>
       </div>
     </div>

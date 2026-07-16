@@ -8,12 +8,36 @@ interface AuthState {
   isAuthenticated: boolean;
 }
 
-const initialState: AuthState = {
-  user: null,
-  accessToken: null,
-  refreshToken: null,
-  isAuthenticated: false,
+const loadFromStorage = (): AuthState => {
+  if (typeof window === "undefined") {
+    return {
+      user: null,
+      accessToken: null,
+      refreshToken: null,
+      isAuthenticated: false,
+    };
+  }
+  try {
+    const user = JSON.parse(localStorage.getItem("user") || "null");
+    const accessToken = localStorage.getItem("accessToken");
+    const refreshToken = localStorage.getItem("refreshToken");
+    return {
+      user,
+      accessToken,
+      refreshToken,
+      isAuthenticated: !!user && !!accessToken,
+    };
+  } catch {
+    return {
+      user: null,
+      accessToken: null,
+      refreshToken: null,
+      isAuthenticated: false,
+    };
+  }
 };
+
+const initialState: AuthState = loadFromStorage();
 
 const authSlice = createSlice({
   name: "auth",
@@ -27,6 +51,7 @@ const authSlice = createSlice({
       state.accessToken = action.payload.access;
       state.refreshToken = action.payload.refresh;
       state.isAuthenticated = true;
+      localStorage.setItem("user", JSON.stringify(action.payload.user));
       localStorage.setItem("accessToken", action.payload.access);
       localStorage.setItem("refreshToken", action.payload.refresh);
     },
@@ -35,6 +60,7 @@ const authSlice = createSlice({
       state.accessToken = null;
       state.refreshToken = null;
       state.isAuthenticated = false;
+      localStorage.removeItem("user");
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
     },

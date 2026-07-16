@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/lib/store/store";
 import {
@@ -13,7 +13,9 @@ import {
   togglePlay,
   toggleShuffle,
   toggleRepeat,
+  setPlaylist,
 } from "@/lib/store/playerSlice";
+import { addToFavorite, removeFromFavorite } from "@/lib/api/catalog";
 import styles from "./Player.module.css";
 import Image from "next/image";
 import Link from "next/link";
@@ -31,6 +33,10 @@ export default function Player() {
     shuffle,
     repeat,
   } = useSelector((state: RootState) => state.player);
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.auth.isAuthenticated
+  );
+  const userId = useSelector((state: RootState) => state.auth.user?._id);
 
   const audioRef = useRef<HTMLAudioElement>(null);
   const currentTrack =
@@ -94,6 +100,51 @@ export default function Player() {
     return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
   };
 
+  const isTrackLiked = useCallback(() => {
+    if (!userId || !currentTrack) return false;
+    return currentTrack.stared_user?.includes(userId) ?? false;
+  }, [userId, currentTrack]);
+
+  const handleLike = useCallback(async () => {
+    if (!isAuthenticated || !currentTrack) {
+      alert("Войдите, чтобы ставить лайки");
+      return;
+    }
+    try {
+      const liked = isTrackLiked();
+      if (liked) {
+        await removeFromFavorite(currentTrack._id);
+        const updatedTrack = {
+          ...currentTrack,
+          stared_user:
+            currentTrack.stared_user?.filter((id) => id !== userId) ?? [],
+        };
+        const updatedPlaylist = playlist.map((t) =>
+          t._id === currentTrack._id ? updatedTrack : t
+        );
+        dispatch(setPlaylist(updatedPlaylist));
+      } else {
+        await addToFavorite(currentTrack._id);
+        const updatedTrack = {
+          ...currentTrack,
+          stared_user: [...(currentTrack.stared_user ?? []), userId!],
+        };
+        const updatedPlaylist = playlist.map((t) =>
+          t._id === currentTrack._id ? updatedTrack : t
+        );
+        dispatch(setPlaylist(updatedPlaylist));
+      }
+    } catch (err: any) {
+      alert(err.message || "Ошибка при изменении лайка");
+    }
+  }, [isAuthenticated, currentTrack, userId, playlist, dispatch, isTrackLiked]);
+
+  const coverSrc =
+    typeof currentTrack?.logo === "string" &&
+    currentTrack.logo.startsWith("http")
+      ? currentTrack.logo
+      : null;
+
   if (!currentTrack) {
     return (
       <div className={styles.bar}>
@@ -106,12 +157,6 @@ export default function Player() {
       </div>
     );
   }
-
-  const coverSrc =
-    typeof currentTrack.logo === "string" &&
-    currentTrack.logo.startsWith("http")
-      ? currentTrack.logo
-      : null;
 
   return (
     <div className={styles.bar}>
@@ -223,11 +268,20 @@ export default function Player() {
                 </div>
               </div>
               <div className={styles.trackPlayLikeDis}>
-                <div className={styles.trackPlayLike}>
-                  <svg className={styles.trackPlayLikeSvg} viewBox="0 0 14 12">
+                <button
+                  onClick={handleLike}
+                  className={styles.likeButton}
+                  aria-label={isTrackLiked() ? "Убрать лайк" : "Поставить лайк"}
+                >
+                  <svg
+                    className={cn(styles.trackPlayLikeSvg, {
+                      [styles.liked]: isTrackLiked(),
+                    })}
+                    viewBox="0 0 14 12"
+                  >
                     <use href="/img/icon/sprite.svg#icon-like" />
                   </svg>
-                </div>
+                </button>
                 <div className={styles.trackPlayDislike}>
                   <svg
                     className={styles.trackPlayDislikeSvg}
