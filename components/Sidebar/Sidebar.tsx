@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/lib/store/store";
 import { logout } from "@/lib/store/authSlice";
@@ -12,7 +13,13 @@ export default function Sidebar() {
   const dispatch = useDispatch();
   const router = useRouter();
   const user = useSelector((state: RootState) => state.auth.user);
-  const username = user?.username || "Гость";
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const username = mounted ? user?.username || "Гость" : "Гость";
 
   const handleLogout = () => {
     dispatch(logout());

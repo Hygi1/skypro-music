@@ -41,10 +41,14 @@ export default function Playlist({ tracks: propTracks }: PlaylistProps) {
   const currentTrack =
     currentTrackIndex !== null ? playlist[currentTrackIndex] : null;
 
+  if (!Array.isArray(playlist)) {
+    return <div>Нет треков</div>;
+  }
+
   const isTrackLiked = useCallback(
     (track: Track) => {
       if (!userId) return false;
-      return track.stared_user?.includes(userId) ?? false;
+      return track.staredUser?.includes(userId) ?? false;
     },
     [userId]
   );
@@ -62,7 +66,7 @@ export default function Playlist({ tracks: propTracks }: PlaylistProps) {
           await removeFromFavorite(track._id);
           const updatedTrack = {
             ...track,
-            stared_user: track.stared_user?.filter((id) => id !== userId) ?? [],
+            staredUser: track.staredUser?.filter((id) => id !== userId) ?? [],
           };
           const updatedPlaylist = playlist.map((t) =>
             t._id === track._id ? updatedTrack : t
@@ -72,7 +76,7 @@ export default function Playlist({ tracks: propTracks }: PlaylistProps) {
           await addToFavorite(track._id);
           const updatedTrack = {
             ...track,
-            stared_user: [...(track.stared_user ?? []), userId!],
+            staredUser: [...(track.staredUser ?? []), userId!],
           };
           const updatedPlaylist = playlist.map((t) =>
             t._id === track._id ? updatedTrack : t

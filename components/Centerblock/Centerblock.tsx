@@ -9,13 +9,28 @@ import Search from "./Search/Search";
 import Filter from "./Filter/Filter";
 import Playlist from "./Playlist";
 import styles from "./Centerblock.module.css";
+import { Track } from "@/lib/types/api";
 
-export default function Centerblock() {
+interface CenterblockProps {
+  tracks?: Track[];
+  title?: string;
+}
+
+export default function Centerblock({
+  tracks: propTracks,
+  title,
+}: CenterblockProps) {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (propTracks && Array.isArray(propTracks)) {
+      dispatch(setPlaylist(propTracks));
+      setLoading(false);
+      return;
+    }
+
     const fetchTracks = async () => {
       setLoading(true);
       setError(null);
@@ -37,14 +52,14 @@ export default function Centerblock() {
       }
     };
     fetchTracks();
-  }, [dispatch]);
+  }, [dispatch, propTracks]);
 
   if (loading) return <div>Загрузка треков...</div>;
 
   return (
     <div className={styles.centerblock}>
       <Search />
-      <h2 className={styles.h2}>Треки</h2>
+      <h2 className={styles.h2}>{title || "Треки"}</h2>
       {error && <div className={styles.error}>{error}</div>}
       <Filter />
       <div className={styles.content}>

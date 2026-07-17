@@ -1,4 +1,4 @@
-.favorites {
+.selection {
   padding: 20px 40px;
   flex: 1;
 }
@@ -13,12 +13,4 @@
   color: red;
   text-align: center;
   margin-top: 50px;
-}
-
-.empty {
-  color: #fff;
-  font-size: 18px;
-  text-align: center;
-  margin-top: 50px;
-  opacity: 0.7;
 }

@@ -4,10 +4,9 @@ import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 import { RootState } from "@/lib/store/store";
-import { getFavoriteTracks, removeFromFavorite } from "@/lib/api/catalog";
+import { getFavoriteTracks } from "@/lib/api/catalog";
 import { Track } from "@/lib/types/api";
-import Playlist from "@/components/Centerblock/Playlist";
-import styles from "./page.module.css";
+import Centerblock from "@/components/Centerblock/Centerblock";
 
 export default function FavoritesPage() {
   const router = useRouter();
@@ -37,26 +36,9 @@ export default function FavoritesPage() {
     fetchFavorites();
   }, [isAuthenticated, router, fetchFavorites]);
 
-  const handleRemove = useCallback(async (trackId: number) => {
-    try {
-      await removeFromFavorite(trackId);
-      setTracks((prev) => prev.filter((t) => t._id !== trackId));
-    } catch (err: any) {
-      alert(err.message || "Ошибка при удалении из избранного");
-    }
-  }, []);
-
   if (loading) return <div>Загрузка избранного...</div>;
-  if (error) return <div className={styles.error}>Ошибка: {error}</div>;
+  if (error)
+    return <div style={{ color: "red", padding: "20px" }}>Ошибка: {error}</div>;
 
-  return (
-    <div className={styles.favorites}>
-      <h1 className={styles.title}>Избранные треки</h1>
-      {tracks.length === 0 ? (
-        <p className={styles.empty}>У вас пока нет избранных треков</p>
-      ) : (
-        <Playlist tracks={tracks} />
-      )}
-    </div>
-  );
+  return <Centerblock tracks={tracks} title="Избранные треки" />;
 }

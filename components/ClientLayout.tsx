@@ -5,12 +5,7 @@ import Navbar from "./Navbar/Navbar";
 import Sidebar from "./Sidebar/Sidebar";
 import Player from "./Player/Player";
 
-// Единый layout для всех страниц, кроме авторизации (Очень на это надеюсь, я уже все перепробовал)
-export default function ClientLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function ClientLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isAuthPage = pathname === "/signin" || pathname === "/signup";
 

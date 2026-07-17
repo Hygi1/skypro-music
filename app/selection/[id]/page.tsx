@@ -3,8 +3,7 @@
 import { useEffect, useState } from "react";
 import { getSelectionById, getAllTracks } from "@/lib/api/catalog";
 import { Track } from "@/lib/types/api";
-import Playlist from "@/components/Centerblock/Playlist";
-import styles from "./page.module.css";
+import Centerblock from "@/components/Centerblock/Centerblock";
 
 export default function SelectionPage({ params }: { params: { id: string } }) {
   const [tracks, setTracks] = useState<Track[]>([]);
@@ -37,12 +36,8 @@ export default function SelectionPage({ params }: { params: { id: string } }) {
   }, [params.id]);
 
   if (loading) return <div>Загрузка подборки...</div>;
-  if (error) return <div className={styles.error}>Ошибка: {error}</div>;
+  if (error)
+    return <div style={{ color: "red", padding: "20px" }}>Ошибка: {error}</div>;
 
-  return (
-    <div className={styles.selection}>
-      <h1 className={styles.title}>{title}</h1>
-      <Playlist tracks={tracks} />
-    </div>
-  );
+  return <Centerblock tracks={tracks} title={title} />;
 }

@@ -102,7 +102,7 @@ export default function Player() {
 
   const isTrackLiked = useCallback(() => {
     if (!userId || !currentTrack) return false;
-    return currentTrack.stared_user?.includes(userId) ?? false;
+    return currentTrack.staredUser?.includes(userId) ?? false;
   }, [userId, currentTrack]);
 
   const handleLike = useCallback(async () => {
@@ -116,8 +116,8 @@ export default function Player() {
         await removeFromFavorite(currentTrack._id);
         const updatedTrack = {
           ...currentTrack,
-          stared_user:
-            currentTrack.stared_user?.filter((id) => id !== userId) ?? [],
+          staredUser:
+            currentTrack.staredUser?.filter((id) => id !== userId) ?? [],
         };
         const updatedPlaylist = playlist.map((t) =>
           t._id === currentTrack._id ? updatedTrack : t
@@ -127,7 +127,7 @@ export default function Player() {
         await addToFavorite(currentTrack._id);
         const updatedTrack = {
           ...currentTrack,
-          stared_user: [...(currentTrack.stared_user ?? []), userId!],
+          staredUser: [...(currentTrack.staredUser ?? []), userId!],
         };
         const updatedPlaylist = playlist.map((t) =>
           t._id === currentTrack._id ? updatedTrack : t
