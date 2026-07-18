@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useEffect, useState, useMemo } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/lib/store/store";
 import { setPlaylist } from "@/lib/store/playerSlice";
 import { getAllTracks } from "@/lib/api/catalog";
 import { data as MOCK_TRACKS } from "@/lib/data";
@@ -10,6 +11,7 @@ import Filter from "./Filter/Filter";
 import Playlist from "./Playlist";
 import styles from "./Centerblock.module.css";
 import { Track } from "@/lib/types/api";
+import { filterTracks, getUniqueAuthors, getUniqueGenres } from "@/lib/filters";
 
 interface CenterblockProps {
   tracks?: Track[];
@@ -21,8 +23,16 @@ export default function Centerblock({
   title,
 }: CenterblockProps) {
   const dispatch = useDispatch();
+  const reduxPlaylist = useSelector(
+    (state: RootState) => state.player.playlist
+  );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedAuthor, setSelectedAuthor] = useState("");
+  const [selectedGenre, setSelectedGenre] = useState("");
+  const [sortBy, setSortBy] = useState("default");
 
   useEffect(() => {
     if (propTracks && Array.isArray(propTracks)) {
@@ -54,14 +64,37 @@ export default function Centerblock({
     fetchTracks();
   }, [dispatch, propTracks]);
 
+  const allTracks = propTracks ?? reduxPlaylist;
+  const authors = useMemo(() => getUniqueAuthors(allTracks), [allTracks]);
+  const genres = useMemo(() => getUniqueGenres(allTracks), [allTracks]);
+
+  const filteredTracks = useMemo(() => {
+    return filterTracks(
+      allTracks,
+      searchQuery,
+      selectedAuthor,
+      selectedGenre,
+      sortBy
+    );
+  }, [allTracks, searchQuery, selectedAuthor, selectedGenre, sortBy]);
+
   if (loading) return <div>Загрузка треков...</div>;
 
   return (
     <div className={styles.centerblock}>
-      <Search />
+      <Search searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
       <h2 className={styles.h2}>{title || "Треки"}</h2>
       {error && <div className={styles.error}>{error}</div>}
-      <Filter />
+      <Filter
+        authors={authors}
+        genres={genres}
+        selectedAuthor={selectedAuthor}
+        setSelectedAuthor={setSelectedAuthor}
+        selectedGenre={selectedGenre}
+        setSelectedGenre={setSelectedGenre}
+        sortBy={sortBy}
+        setSortBy={setSortBy}
+      />
       <div className={styles.content}>
         <div className={styles.contentTitle}>
           <div className={`${styles.playlistTitleCol} ${styles.col01}`}>
@@ -79,7 +112,11 @@ export default function Centerblock({
             </svg>
           </div>
         </div>
-        <Playlist />
+        {filteredTracks.length === 0 ? (
+          <div className={styles.noTracks}>Нет подходящих треков</div>
+        ) : (
+          <Playlist tracks={filteredTracks} />
+        )}
       </div>
     </div>
   );
