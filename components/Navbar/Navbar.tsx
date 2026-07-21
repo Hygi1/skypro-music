@@ -1,8 +1,15 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import styles from "./Navbar.module.css";
+import cn from "classnames";
 
 export default function Navbar() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const toggleMenu = () => setIsMenuOpen((prev) => !prev);
+
   return (
     <nav className={styles.nav}>
       <div className={styles.logo}>
@@ -14,12 +21,17 @@ export default function Navbar() {
           priority
         />
       </div>
-      <div className={styles.burger}>
+      <div className={styles.burger} onClick={toggleMenu} aria-label="Меню">
         <span className={styles.burgerLine}></span>
         <span className={styles.burgerLine}></span>
         <span className={styles.burgerLine}></span>
       </div>
-      <div className={styles.menu}>
+      <div
+        className={cn(styles.menu, {
+          [styles.menuClosed]: !isMenuOpen,
+          [styles.menuOpen]: isMenuOpen,
+        })}
+      >
         <ul className={styles.menuList}>
           <li className={styles.menuItem}>
             <Link href="/" className={styles.menuLink}>
@@ -27,8 +39,8 @@ export default function Navbar() {
             </Link>
           </li>
           <li className={styles.menuItem}>
-            <Link href="/playlist" className={styles.menuLink}>
-              Мой плейлист
+            <Link href="/favorites" className={styles.menuLink}>
+              Избранное
             </Link>
           </li>
           <li className={styles.menuItem}>

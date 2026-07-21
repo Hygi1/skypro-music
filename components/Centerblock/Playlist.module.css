@@ -3,27 +3,25 @@
   flex-direction: column;
   overflow-y: auto;
 }
-
 .playlist__item {
   width: 100%;
-  display: block;
   margin-bottom: 12px;
+  cursor: pointer;
 }
-
+.playing {
+  background-color: rgba(89, 89, 89, 0.2);
+  border-radius: 8px;
+}
 .playlist__track {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
 }
-
 .track__title {
   display: flex;
-  flex-direction: row;
   align-items: center;
   width: 447px;
 }
-
 .track__titleImage {
   width: 51px;
   height: 51px;
@@ -34,62 +32,59 @@
   justify-content: center;
   margin-right: 17px;
 }
-
 .track__titleSvg {
   width: 18px;
   height: 17px;
   fill: transparent;
   stroke: #4e4e4e;
 }
-
+.pulsingDot {
+  width: 18px;
+  height: 18px;
+  background-color: #b572ff;
+  border-radius: 50%;
+  animation: pulse 1.2s infinite ease-in-out;
+}
+@keyframes pulse {
+  0% {
+    opacity: 0.3;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0.3;
+    transform: scale(0.8);
+  }
+}
 .track__titleLink {
-  font-style: normal;
-  font-weight: 400;
   font-size: 16px;
-  line-height: 24px;
   color: #ffffff;
   text-decoration: none;
 }
-
-.track__titleLink:hover {
-  text-decoration: underline;
-}
-
 .track__author {
   width: 321px;
-  display: flex;
-  justify-content: flex-start;
 }
-
 .track__authorLink {
-  font-style: normal;
-  font-weight: 400;
   font-size: 16px;
-  line-height: 24px;
   color: #ffffff;
-  text-align: left;
   text-decoration: none;
 }
-
 .track__album {
   width: 245px;
 }
-
 .track__albumLink {
-  font-style: normal;
-  font-weight: 400;
   font-size: 16px;
-  line-height: 24px;
   color: #696969;
   text-decoration: none;
 }
-
 .track__time {
   display: flex;
   align-items: center;
   gap: 17px;
 }
-
 .track__timeSvg {
   width: 14px;
   height: 12px;
@@ -97,12 +92,30 @@
   stroke: #696969;
   cursor: pointer;
 }
-
 .track__timeText {
-  font-style: normal;
-  font-weight: 400;
   font-size: 16px;
-  line-height: 24px;
-  text-align: right;
   color: #696969;
+}
+.likeButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+}
+
+.track__timeSvg {
+  width: 14px;
+  height: 12px;
+  fill: transparent;
+  stroke: #696969;
+  transition:
+    fill 0.2s,
+    stroke 0.2s;
+}
+
+.track__timeSvg.liked {
+  fill: #b572ff;
+  stroke: #b572ff;
 }
