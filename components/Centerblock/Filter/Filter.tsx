@@ -9,8 +9,8 @@ type FilterType = "author" | "genre" | "sort" | null;
 interface FilterProps {
   authors: string[];
   genres: string[];
-  selectedAuthor: string;
-  setSelectedAuthor: (value: string) => void;
+  selectedAuthors: string[];
+  setSelectedAuthors: (value: string[]) => void;
   selectedGenre: string;
   setSelectedGenre: (value: string) => void;
   sortBy: string;
@@ -20,8 +20,8 @@ interface FilterProps {
 export default function Filter({
   authors,
   genres,
-  selectedAuthor,
-  setSelectedAuthor,
+  selectedAuthors,
+  setSelectedAuthors,
   selectedGenre,
   setSelectedGenre,
   sortBy,
@@ -37,16 +37,25 @@ export default function Filter({
     }
   };
 
-  const handleSelect = (value: string, type: "author" | "genre" | "sort") => {
-    if (type === "author") {
-      setSelectedAuthor(selectedAuthor === value ? "" : value);
-    } else if (type === "genre") {
-      setSelectedGenre(selectedGenre === value ? "" : value);
-    } else if (type === "sort") {
-      setSortBy(sortBy === value ? "default" : value);
-    }
+  const handleAuthorToggle = (author: string) => {
+    const newSelected = selectedAuthors.includes(author)
+      ? selectedAuthors.filter((a) => a !== author)
+      : [...selectedAuthors, author];
+    setSelectedAuthors(newSelected);
     setActiveFilter(null);
   };
+
+  const handleGenreSelect = (genre: string) => {
+    setSelectedGenre(selectedGenre === genre ? "" : genre);
+    setActiveFilter(null);
+  };
+
+  const handleSortSelect = (value: string) => {
+    setSortBy(sortBy === value ? "default" : value);
+    setActiveFilter(null);
+  };
+
+  const selectedCount = selectedAuthors.length;
 
   return (
     <div className={styles.filter}>
@@ -55,28 +64,25 @@ export default function Filter({
       <div className={styles.filterItem}>
         <button
           className={cn(styles.filterButton, {
-            [styles.active]: selectedAuthor,
+            [styles.active]: selectedCount > 0,
           })}
           onClick={() => handleFilterClick("author")}
         >
-          исполнителю
+          <span className={styles.buttonText}>исполнителю</span>
+          {selectedCount > 0 && (
+            <span className={styles.badge}>{selectedCount}</span>
+          )}
         </button>
         {activeFilter === "author" && (
           <div className={styles.dropdown}>
             <ul className={styles.dropdownList}>
-              <li
-                className={styles.dropdownItem}
-                onClick={() => handleSelect("", "author")}
-              >
-                Все исполнители
-              </li>
               {authors.map((author) => (
                 <li
                   key={author}
                   className={cn(styles.dropdownItem, {
-                    [styles.selected]: selectedAuthor === author,
+                    [styles.selected]: selectedAuthors.includes(author),
                   })}
-                  onClick={() => handleSelect(author, "author")}
+                  onClick={() => handleAuthorToggle(author)}
                 >
                   {author}
                 </li>
@@ -100,7 +106,7 @@ export default function Filter({
             <ul className={styles.dropdownList}>
               <li
                 className={styles.dropdownItem}
-                onClick={() => handleSelect("", "genre")}
+                onClick={() => handleGenreSelect("")}
               >
                 Все жанры
               </li>
@@ -110,7 +116,7 @@ export default function Filter({
                   className={cn(styles.dropdownItem, {
                     [styles.selected]: selectedGenre === genre,
                   })}
-                  onClick={() => handleSelect(genre, "genre")}
+                  onClick={() => handleGenreSelect(genre)}
                 >
                   {genre}
                 </li>
@@ -136,7 +142,7 @@ export default function Filter({
                 className={cn(styles.dropdownItem, {
                   [styles.selected]: sortBy === "default",
                 })}
-                onClick={() => handleSelect("default", "sort")}
+                onClick={() => handleSortSelect("default")}
               >
                 По умолчанию
               </li>
@@ -144,7 +150,7 @@ export default function Filter({
                 className={cn(styles.dropdownItem, {
                   [styles.selected]: sortBy === "newest",
                 })}
-                onClick={() => handleSelect("newest", "sort")}
+                onClick={() => handleSortSelect("newest")}
               >
                 Сначала новые
               </li>
@@ -152,7 +158,7 @@ export default function Filter({
                 className={cn(styles.dropdownItem, {
                   [styles.selected]: sortBy === "oldest",
                 })}
-                onClick={() => handleSelect("oldest", "sort")}
+                onClick={() => handleSortSelect("oldest")}
               >
                 Сначала старые
               </li>

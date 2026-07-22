@@ -3,7 +3,7 @@ import { Track } from "@/lib/types/api";
 export const filterTracks = (
   tracks: Track[],
   searchQuery: string,
-  selectedAuthor: string,
+  selectedAuthors: string[],
   selectedGenre: string,
   sortBy: string
 ): Track[] => {
@@ -16,8 +16,8 @@ export const filterTracks = (
     );
   }
 
-  if (selectedAuthor) {
-    result = result.filter((track) => track.author === selectedAuthor);
+  if (selectedAuthors.length > 0) {
+    result = result.filter((track) => selectedAuthors.includes(track.author));
   }
 
   if (selectedGenre) {

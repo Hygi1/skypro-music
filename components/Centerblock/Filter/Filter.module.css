@@ -1,53 +1,83 @@
 .filter {
   display: flex;
+  flex-direction: row;
   align-items: center;
   margin-bottom: 51px;
   gap: 10px;
   flex-wrap: wrap;
 }
+
 .filterTitle {
+  font-style: normal;
+  font-weight: 400;
   font-size: 16px;
+  line-height: 24px;
+  margin-right: 15px;
   color: #ffffff;
   white-space: nowrap;
 }
+
 .filterItem {
   position: relative;
-  width: 140px;
 }
+
 .filterButton {
-  width: 100%;
-  text-align: center;
+  position: relative;
+  font-style: normal;
+  font-weight: 400;
   font-size: 16px;
+  line-height: 24px;
   border: 1px solid #ffffff;
   border-radius: 60px;
-  padding: 6px 10px;
+  padding: 6px 20px;
+  cursor: pointer;
   background: transparent;
   color: #ffffff;
-  cursor: pointer;
-  white-space: nowrap;
   transition: all 0.2s;
+  white-space: nowrap;
 }
+
 .filterButton:hover {
   border-color: #d9b6ff;
   color: #d9b6ff;
 }
+
 .active {
   border-color: #ad61ff;
   color: #ad61ff;
 }
+
+.badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  display: inline-block;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 10px;
+  background-color: #ad61ff;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 20px;
+  text-align: center;
+  pointer-events: none;
+}
+
 .dropdown {
   position: absolute;
-  top: 100%;
+  top: calc(100% + 8px);
   left: 0;
   background-color: #313131;
   border-radius: 12px;
   padding: 16px;
-  margin-top: 10px;
   z-index: 10;
   min-width: 200px;
   width: max-content;
   max-width: 248px;
 }
+
 .dropdownList {
   list-style: none;
   padding: 0;
@@ -58,27 +88,33 @@
   max-height: 237px;
   overflow-y: auto;
 }
+
 .dropdownList::-webkit-scrollbar {
   width: 4px;
 }
+
 .dropdownList::-webkit-scrollbar-track {
-  background-color: rgba(75, 73, 73, 1);
+  background-color: #4b4949;
   border-radius: 2px;
 }
+
 .dropdownList::-webkit-scrollbar-thumb {
-  background-color: white;
+  background-color: #ffffff;
   border-radius: 2px;
 }
+
 .dropdownItem {
   color: #ffffff;
   font-size: 16px;
   cursor: pointer;
   white-space: nowrap;
 }
+
 .dropdownItem:hover {
   color: #b572ff;
   text-decoration: underline;
 }
+
 .selected {
   color: #b572ff;
 }
