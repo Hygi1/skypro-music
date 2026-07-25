@@ -1,10 +1,11 @@
-import api from "./client";
+import api from './client';
+import { User, AuthResponse } from '@/lib/types/api';
 
 export const signup = (email: string, password: string, username: string) =>
-  api.post("/user/signup/", { email, password, username });
+  api.post<{ message: string; result: User; success: boolean }>('/user/signup/', { email, password, username });
 
 export const login = (email: string, password: string) =>
-  api.post("/user/login/", { email, password });
+  api.post<User>('/user/login/', { email, password });
 
 export const getTokens = (email: string, password: string) =>
-  api.post("/user/token/", { email, password });
+  api.post<AuthResponse>('/user/token/', { email, password });

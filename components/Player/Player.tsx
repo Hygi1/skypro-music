@@ -20,6 +20,7 @@ import styles from "./Player.module.css";
 import Image from "next/image";
 import Link from "next/link";
 import cn from "classnames";
+import { showWarning, showError } from "@/lib/toast";
 
 export default function Player() {
   const dispatch = useDispatch();
@@ -107,7 +108,7 @@ export default function Player() {
 
   const handleLike = useCallback(async () => {
     if (!isAuthenticated || !currentTrack) {
-      alert("Войдите, чтобы ставить лайки");
+      showWarning("Войдите, чтобы ставить лайки");
       return;
     }
     try {
@@ -134,8 +135,10 @@ export default function Player() {
         );
         dispatch(setPlaylist(updatedPlaylist));
       }
-    } catch (err: any) {
-      alert(err.message || "Ошибка при изменении лайка");
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : "Ошибка при изменении лайка";
+      showError(message);
     }
   }, [isAuthenticated, currentTrack, userId, playlist, dispatch, isTrackLiked]);
 

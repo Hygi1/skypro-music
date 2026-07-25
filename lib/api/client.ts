@@ -3,7 +3,14 @@ import { store } from "@/lib/store/store";
 
 const BASE_URL = "https://webdev-music-003b5b991590.herokuapp.com";
 
-async function request(endpoint: string, options: RequestInit = {}) {
+type RequestOptions = RequestInit & {
+  body?: unknown;
+};
+
+async function request<T = unknown>(
+  endpoint: string,
+  options: RequestOptions = {}
+): Promise<T> {
   const url = `${BASE_URL}${endpoint}`;
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
@@ -71,9 +78,9 @@ async function request(endpoint: string, options: RequestInit = {}) {
     }
 
     return response.json();
-  } catch (err: any) {
+  } catch (err) {
     clearTimeout(timeoutId);
-    if (err.name === "AbortError") {
+    if (err instanceof Error && err.name === "AbortError") {
       throw new Error("Сервер не отвечает, попробуйте позже");
     }
     throw err;
@@ -81,10 +88,12 @@ async function request(endpoint: string, options: RequestInit = {}) {
 }
 
 export default {
-  get: (endpoint: string) => request(endpoint, { method: "GET" }),
-  post: (endpoint: string, body: any) =>
-    request(endpoint, { method: "POST", body: JSON.stringify(body) }),
-  put: (endpoint: string, body: any) =>
-    request(endpoint, { method: "PUT", body: JSON.stringify(body) }),
-  delete: (endpoint: string) => request(endpoint, { method: "DELETE" }),
+  get: <T = unknown>(endpoint: string) =>
+    request<T>(endpoint, { method: "GET" }),
+  post: <T = unknown>(endpoint: string, body: unknown) =>
+    request<T>(endpoint, { method: "POST", body: JSON.stringify(body) }),
+  put: <T = unknown>(endpoint: string, body: unknown) =>
+    request<T>(endpoint, { method: "PUT", body: JSON.stringify(body) }),
+  delete: <T = unknown>(endpoint: string) =>
+    request<T>(endpoint, { method: "DELETE" }),
 };

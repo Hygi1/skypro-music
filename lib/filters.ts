@@ -4,9 +4,11 @@ export const filterTracks = (
   tracks: Track[],
   searchQuery: string,
   selectedAuthors: string[],
-  selectedGenre: string,
+  selectedGenres: string[],
   sortBy: string
 ): Track[] => {
+  if (!Array.isArray(tracks)) return [];
+
   let result = [...tracks];
 
   if (searchQuery.trim()) {
@@ -20,8 +22,10 @@ export const filterTracks = (
     result = result.filter((track) => selectedAuthors.includes(track.author));
   }
 
-  if (selectedGenre) {
-    result = result.filter((track) => track.genre.includes(selectedGenre));
+  if (selectedGenres.length > 0) {
+    result = result.filter((track) =>
+      track.genre.some((g) => selectedGenres.includes(g))
+    );
   }
 
   if (sortBy === "newest") {
@@ -40,11 +44,13 @@ export const filterTracks = (
 };
 
 export const getUniqueAuthors = (tracks: Track[]): string[] => {
+  if (!Array.isArray(tracks)) return [];
   const authors = tracks.map((t) => t.author);
   return Array.from(new Set(authors));
 };
 
 export const getUniqueGenres = (tracks: Track[]): string[] => {
+  if (!Array.isArray(tracks)) return [];
   const genres = tracks.flatMap((t) => t.genre);
   return Array.from(new Set(genres));
 };

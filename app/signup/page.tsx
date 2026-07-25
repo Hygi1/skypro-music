@@ -8,6 +8,8 @@ import { setCredentials } from "@/lib/store/authSlice";
 import styles from "./signup.module.css";
 import Link from "next/link";
 import Image from "next/image";
+import { showError } from "@/lib/toast";
+import { User, AuthResponse } from "@/lib/types/api";
 
 export default function Signup() {
   const router = useRouter();
@@ -19,28 +21,20 @@ export default function Signup() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Форма отправлена (POST), preventDefault сработал"); // для проверки
-
     setError("");
     setLoading(true);
-
     if (password !== confirmPassword) {
       setError("Пароли не совпадают");
+      showError("Пароли не совпадают");
       setLoading(false);
       return;
     }
-
     try {
-      console.log("Отправка запроса на регистрацию...");
       await signup(email, password, username);
-      console.log("Регистрация успешна, получаем токены...");
-      const tokenData = await getTokens(email, password);
-      console.log("Токены получены, логинимся...");
-      const userData = await login(email, password);
-      console.log("Пользователь получен:", userData);
-
+      const tokenData: AuthResponse = await getTokens(email, password);
+      const userData: User = await login(email, password);
       dispatch(
         setCredentials({
           user: userData,
@@ -48,13 +42,11 @@ export default function Signup() {
           refresh: tokenData.refresh,
         })
       );
-
-      console.log("Редирект на главную...");
-
       router.push("/");
-    } catch (err: any) {
-      console.error("Ошибка:", err);
-      setError(err.message || "Ошибка регистрации");
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Ошибка регистрации";
+      setError(message);
+      showError(message);
     } finally {
       setLoading(false);
     }
@@ -67,12 +59,7 @@ export default function Signup() {
           <form className={styles.modal__form} onSubmit={handleSubmit}>
             <Link href="/">
               <div className={styles.modal__logo}>
-                <Image
-                  src="/img/logo_modal.png"
-                  alt="logo"
-                  width={140}
-                  height={21}
-                />
+                <Image src="/img/logo_modal.png" alt="logo" width={140} height={21} />
               </div>
             </Link>
             <input
@@ -108,11 +95,7 @@ export default function Signup() {
               required
             />
             {error && <div className={styles.errorContainer}>{error}</div>}
-            <button
-              type="submit"
-              className={styles.modal__btnSignupEnt}
-              disabled={loading}
-            >
+            <button type="submit" className={styles.modal__btnSignupEnt} disabled={loading}>
               {loading ? "Загрузка..." : "Зарегистрироваться"}
             </button>
           </form>

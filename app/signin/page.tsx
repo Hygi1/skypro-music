@@ -8,6 +8,8 @@ import { setCredentials } from "@/lib/store/authSlice";
 import styles from "./signin.module.css";
 import Link from "next/link";
 import Image from "next/image";
+import { showError } from "@/lib/toast";
+import { User, AuthResponse } from "@/lib/types/api";
 
 export default function Signin() {
   const router = useRouter();
@@ -17,22 +19,13 @@ export default function Signin() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Форма отправлена (POST), preventDefault сработал");
-
     setLoading(true);
     setError("");
-
     try {
-      console.log("Запрос токенов для:", email);
-      const tokenData = await getTokens(email, password);
-      console.log("Токены получены:", tokenData);
-
-      console.log("Запрос данных пользователя...");
-      const userData = await login(email, password);
-      console.log("Пользователь получен:", userData);
-
+      const tokenData: AuthResponse = await getTokens(email, password);
+      const userData: User = await login(email, password);
       dispatch(
         setCredentials({
           user: userData,
@@ -40,12 +33,11 @@ export default function Signin() {
           refresh: tokenData.refresh,
         })
       );
-
-      console.log("Редирект на главную...");
       router.push("/");
-    } catch (err: any) {
-      console.error("Ошибка входа:", err);
-      setError(err.message || "Ошибка входа");
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Ошибка входа";
+      setError(message);
+      showError(message);
     } finally {
       setLoading(false);
     }
@@ -58,12 +50,7 @@ export default function Signin() {
           <form className={styles.modal__form} onSubmit={handleSubmit}>
             <Link href="/">
               <div className={styles.modal__logo}>
-                <Image
-                  src="/img/logo_modal.png"
-                  alt="logo"
-                  width={140}
-                  height={21}
-                />
+                <Image src="/img/logo_modal.png" alt="logo" width={140} height={21} />
               </div>
             </Link>
             <input
@@ -83,11 +70,7 @@ export default function Signin() {
               required
             />
             {error && <div className={styles.errorContainer}>{error}</div>}
-            <button
-              type="submit"
-              className={styles.modal__btnEnter}
-              disabled={loading}
-            >
+            <button type="submit" className={styles.modal__btnEnter} disabled={loading}>
               {loading ? "Загрузка..." : "Войти"}
             </button>
             <Link href="/signup" className={styles.modal__btnSignup}>

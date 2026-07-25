@@ -12,6 +12,8 @@ import Playlist from "./Playlist";
 import styles from "./Centerblock.module.css";
 import { Track } from "@/lib/types/api";
 import { filterTracks, getUniqueAuthors, getUniqueGenres } from "@/lib/filters";
+import ErrorDisplay from "@/components/ErrorDisplay/ErrorDisplay";
+import { showError } from "@/lib/toast";
 
 interface CenterblockProps {
   tracks?: Track[];
@@ -28,43 +30,59 @@ export default function Centerblock({
   );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isNotFound, setIsNotFound] = useState(false);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedAuthors, setSelectedAuthors] = useState<string[]>([]);
-  const [selectedGenre, setSelectedGenre] = useState("");
+  const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState("default");
 
-  useEffect(() => {
-    if (propTracks && Array.isArray(propTracks)) {
-      dispatch(setPlaylist(propTracks));
-      setLoading(false);
-      return;
-    }
+  const loadTracks = async (tracksFromProp?: Track[]) => {
+    setLoading(true);
+    setError(null);
+    setIsNotFound(false);
 
-    const fetchTracks = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const tracks = await getAllTracks();
-        if (tracks && tracks.length > 0) {
-          dispatch(setPlaylist(tracks));
-        } else {
+    try {
+      let tracks: Track[];
+
+      if (tracksFromProp && Array.isArray(tracksFromProp)) {
+        tracks = tracksFromProp;
+      } else {
+        tracks = await getAllTracks();
+      }
+
+      if (!tracks || tracks.length === 0) {
+        if (!tracksFromProp) {
           dispatch(setPlaylist(MOCK_TRACKS));
           setError("Сервер вернул пустой список, показаны локальные треки");
+          showError("Сервер вернул пустой список");
+        } else {
+          setIsNotFound(true);
         }
-      } catch (err: any) {
-        dispatch(setPlaylist(MOCK_TRACKS));
-        setError(
-          err.message || "Не удалось загрузить треки, показаны локальные"
-        );
-      } finally {
-        setLoading(false);
+        return;
       }
-    };
-    fetchTracks();
+
+      dispatch(setPlaylist(tracks));
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Неизвестная ошибка";
+      setError(`Не удалось загрузить треки: ${message}`);
+      showError(message);
+
+      dispatch(setPlaylist(MOCK_TRACKS));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (propTracks) {
+      loadTracks(propTracks);
+      return;
+    }
+    loadTracks();
   }, [dispatch, propTracks]);
 
-  const allTracks = propTracks ?? reduxPlaylist;
+  const allTracks = propTracks ?? reduxPlaylist ?? [];
   const authors = useMemo(() => getUniqueAuthors(allTracks), [allTracks]);
   const genres = useMemo(() => getUniqueGenres(allTracks), [allTracks]);
 
@@ -73,25 +91,36 @@ export default function Centerblock({
       allTracks,
       searchQuery,
       selectedAuthors,
-      selectedGenre,
+      selectedGenres,
       sortBy
     );
-  }, [allTracks, searchQuery, selectedAuthors, selectedGenre, sortBy]);
+  }, [allTracks, searchQuery, selectedAuthors, selectedGenres, sortBy]);
 
   if (loading) return <div>Загрузка треков...</div>;
+
+  if (isNotFound) {
+    return <ErrorDisplay type="not-found" />;
+  }
+
+  if (error && !propTracks) {
+    return (
+      <ErrorDisplay type="error" message={error} onRetry={() => loadTracks()} />
+    );
+  }
 
   return (
     <div className={styles.centerblock}>
       <Search searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
       <h2 className={styles.h2}>{title || "Треки"}</h2>
+
       {error && <div className={styles.error}>{error}</div>}
       <Filter
         authors={authors}
         genres={genres}
         selectedAuthors={selectedAuthors}
         setSelectedAuthors={setSelectedAuthors}
-        selectedGenre={selectedGenre}
-        setSelectedGenre={setSelectedGenre}
+        selectedGenres={selectedGenres}
+        setSelectedGenres={setSelectedGenres}
         sortBy={sortBy}
         setSortBy={setSortBy}
       />
