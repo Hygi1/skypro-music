@@ -30,7 +30,7 @@ export default function Centerblock({
   const [error, setError] = useState<string | null>(null);
 
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedAuthor, setSelectedAuthor] = useState("");
+  const [selectedAuthors, setSelectedAuthors] = useState<string[]>([]);
   const [selectedGenre, setSelectedGenre] = useState("");
   const [sortBy, setSortBy] = useState("default");
 
@@ -72,11 +72,11 @@ export default function Centerblock({
     return filterTracks(
       allTracks,
       searchQuery,
-      selectedAuthor,
+      selectedAuthors,
       selectedGenre,
       sortBy
     );
-  }, [allTracks, searchQuery, selectedAuthor, selectedGenre, sortBy]);
+  }, [allTracks, searchQuery, selectedAuthors, selectedGenre, sortBy]);
 
   if (loading) return <div>Загрузка треков...</div>;
 
@@ -88,8 +88,8 @@ export default function Centerblock({
       <Filter
         authors={authors}
         genres={genres}
-        selectedAuthor={selectedAuthor}
-        setSelectedAuthor={setSelectedAuthor}
+        selectedAuthors={selectedAuthors}
+        setSelectedAuthors={setSelectedAuthors}
         selectedGenre={selectedGenre}
         setSelectedGenre={setSelectedGenre}
         sortBy={sortBy}

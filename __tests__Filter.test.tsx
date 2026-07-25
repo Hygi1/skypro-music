@@ -1,23 +1,111 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import Filter from "@/components/Centerblock/Filter/Filter";
 
-const mockAuthors = ["Author1", "Author2"];
+const mockAuthors = ["Author1", "Author2", "Author3"];
 const mockGenres = ["Genre1", "Genre2"];
 
-test("Filter toggles dropdown on button click", () => {
-  render(
-    <Filter
-      authors={mockAuthors}
-      genres={mockGenres}
-      selectedAuthor=""
-      setSelectedAuthor={jest.fn()}
-      selectedGenre=""
-      setSelectedGenre={jest.fn()}
-      sortBy="default"
-      setSortBy={jest.fn()}
-    />
-  );
+const defaultProps = {
+  authors: mockAuthors,
+  genres: mockGenres,
+  selectedAuthors: [],
+  setSelectedAuthors: jest.fn(),
+  selectedGenre: "",
+  setSelectedGenre: jest.fn(),
+  sortBy: "default",
+  setSortBy: jest.fn(),
+};
+
+test("Filter toggles author dropdown on button click", () => {
+  render(<Filter {...defaultProps} />);
   const button = screen.getByText("исполнителю");
   fireEvent.click(button);
-  expect(screen.getByText("Все исполнители")).toBeInTheDocument();
+  expect(screen.getByText("Author1")).toBeInTheDocument();
+  expect(screen.getByText("Author2")).toBeInTheDocument();
+  expect(screen.getByText("Author3")).toBeInTheDocument();
+});
+
+test("Filter toggles genre dropdown on button click", () => {
+  render(<Filter {...defaultProps} />);
+  const button = screen.getByText("жанру");
+  fireEvent.click(button);
+  expect(screen.getByText("Все жанры")).toBeInTheDocument();
+  expect(screen.getByText("Genre1")).toBeInTheDocument();
+  expect(screen.getByText("Genre2")).toBeInTheDocument();
+});
+
+test("Filter toggles sort dropdown on button click", () => {
+  render(<Filter {...defaultProps} />);
+  const button = screen.getByText("сортировка");
+  fireEvent.click(button);
+  expect(screen.getByText("По умолчанию")).toBeInTheDocument();
+  expect(screen.getByText("Сначала новые")).toBeInTheDocument();
+  expect(screen.getByText("Сначала старые")).toBeInTheDocument();
+});
+
+test("Filter displays badge with count when authors selected", () => {
+  const { rerender } = render(
+    <Filter {...defaultProps} selectedAuthors={["Author1"]} />
+  );
+  expect(screen.getByText("1")).toBeInTheDocument();
+
+  rerender(
+    <Filter {...defaultProps} selectedAuthors={["Author1", "Author2"]} />
+  );
+  expect(screen.getByText("2")).toBeInTheDocument();
+});
+
+test("Filter does not show badge when no authors selected", () => {
+  render(<Filter {...defaultProps} selectedAuthors={[]} />);
+  expect(screen.queryByText("1")).not.toBeInTheDocument();
+  expect(screen.queryByText("2")).not.toBeInTheDocument();
+});
+
+test("Filter calls setSelectedAuthors when clicking author in dropdown", () => {
+  const setSelectedAuthors = jest.fn();
+  render(
+    <Filter
+      {...defaultProps}
+      setSelectedAuthors={setSelectedAuthors}
+      selectedAuthors={[]}
+    />
+  );
+  fireEvent.click(screen.getByText("исполнителю"));
+  fireEvent.click(screen.getByText("Author1"));
+  expect(setSelectedAuthors).toHaveBeenCalledWith(["Author1"]);
+});
+
+test("Filter calls setSelectedAuthors with empty array when deselecting last author", () => {
+  const setSelectedAuthors = jest.fn();
+  render(
+    <Filter
+      {...defaultProps}
+      setSelectedAuthors={setSelectedAuthors}
+      selectedAuthors={["Author1"]}
+    />
+  );
+  fireEvent.click(screen.getByText("исполнителю"));
+  fireEvent.click(screen.getByText("Author1"));
+  expect(setSelectedAuthors).toHaveBeenCalledWith([]);
+});
+
+test("Filter calls setSelectedGenre when selecting genre", () => {
+  const setSelectedGenre = jest.fn();
+  render(
+    <Filter
+      {...defaultProps}
+      setSelectedGenre={setSelectedGenre}
+      selectedGenre=""
+    />
+  );
+  fireEvent.click(screen.getByText("жанру"));
+  fireEvent.click(screen.getByText("Genre1"));
+  expect(setSelectedGenre).toHaveBeenCalledWith("Genre1");
+});
+
+test("Filter calls setSortBy when selecting sort option", () => {
+  const setSortBy = jest.fn();
+  render(<Filter {...defaultProps} setSortBy={setSortBy} sortBy="default" />);
+  fireEvent.click(screen.getByText("сортировка"));
+  fireEvent.click(screen.getByText("Сначала новые"));
+  expect(setSortBy).toHaveBeenCalledWith("newest");
 });

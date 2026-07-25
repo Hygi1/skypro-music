@@ -3,7 +3,9 @@
   flex-grow: 3;
   padding: 20px 40px 20px 111px;
 }
+
 .h2 {
+  font-style: normal;
   font-weight: 400;
   font-size: 64px;
   line-height: 72px;
@@ -11,17 +13,22 @@
   margin-bottom: 45px;
   color: #ffffff;
 }
+
 .content {
   display: flex;
   flex-direction: column;
 }
+
 .contentTitle {
   display: flex;
+  flex-direction: row;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 24px;
 }
+
 .playlistTitleCol {
+  font-style: normal;
   font-weight: 400;
   font-size: 14px;
   line-height: 24px;
@@ -29,34 +36,37 @@
   color: #696969;
   text-transform: uppercase;
 }
+
+.col01 {
+  width: 447px;
+}
+
+.col02 {
+  width: 321px;
+}
+
+.col03 {
+  width: 245px;
+}
+
+.col04 {
+  width: 60px;
+  text-align: end;
+}
+
 .playlistTitleSvg {
   width: 12px;
   height: 12px;
   fill: transparent;
   stroke: #696969;
 }
-.col01 {
-  width: 447px;
-}
-.col02 {
-  width: 321px;
-}
-.col03 {
-  width: 245px;
-}
-.col04 {
-  width: 60px;
-  text-align: end;
-}
+
 .error {
-  color: #ff6b6b;
-}
-.error {
-  color: #ff5555;
+  color: red;
   text-align: center;
   margin-top: 50px;
-  font-size: 18px;
 }
+
 .noTracks {
   color: #fff;
   font-size: 18px;
