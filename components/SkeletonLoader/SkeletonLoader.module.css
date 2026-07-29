@@ -1,0 +1,17 @@
+.skeletonWrapper {
+  padding: 20px;
+}
+.searchSkeleton {
+  margin-bottom: 20px;
+}
+.filterSkeleton {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+.trackSkeleton {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 15px;
+}

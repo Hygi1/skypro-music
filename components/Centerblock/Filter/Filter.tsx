@@ -11,8 +11,8 @@ interface FilterProps {
   genres: string[];
   selectedAuthors: string[];
   setSelectedAuthors: (value: string[]) => void;
-  selectedGenre: string;
-  setSelectedGenre: (value: string) => void;
+  selectedGenres: string[];
+  setSelectedGenres: (value: string[]) => void;
   sortBy: string;
   setSortBy: (value: string) => void;
 }
@@ -22,8 +22,8 @@ export default function Filter({
   genres,
   selectedAuthors,
   setSelectedAuthors,
-  selectedGenre,
-  setSelectedGenre,
+  selectedGenres,
+  setSelectedGenres,
   sortBy,
   setSortBy,
 }: FilterProps) {
@@ -45,8 +45,11 @@ export default function Filter({
     setActiveFilter(null);
   };
 
-  const handleGenreSelect = (genre: string) => {
-    setSelectedGenre(selectedGenre === genre ? "" : genre);
+  const handleGenreToggle = (genre: string) => {
+    const newSelected = selectedGenres.includes(genre)
+      ? selectedGenres.filter((g) => g !== genre)
+      : [...selectedGenres, genre];
+    setSelectedGenres(newSelected);
     setActiveFilter(null);
   };
 
@@ -55,7 +58,8 @@ export default function Filter({
     setActiveFilter(null);
   };
 
-  const selectedCount = selectedAuthors.length;
+  const authorsCount = selectedAuthors.length;
+  const genresCount = selectedGenres.length;
 
   return (
     <div className={styles.filter}>
@@ -64,13 +68,13 @@ export default function Filter({
       <div className={styles.filterItem}>
         <button
           className={cn(styles.filterButton, {
-            [styles.active]: selectedCount > 0,
+            [styles.active]: authorsCount > 0,
           })}
           onClick={() => handleFilterClick("author")}
         >
           <span className={styles.buttonText}>исполнителю</span>
-          {selectedCount > 0 && (
-            <span className={styles.badge}>{selectedCount}</span>
+          {authorsCount > 0 && (
+            <span className={styles.badge}>{authorsCount}</span>
           )}
         </button>
         {activeFilter === "author" && (
@@ -95,28 +99,25 @@ export default function Filter({
       <div className={styles.filterItem}>
         <button
           className={cn(styles.filterButton, {
-            [styles.active]: selectedGenre,
+            [styles.active]: genresCount > 0,
           })}
           onClick={() => handleFilterClick("genre")}
         >
-          жанру
+          <span className={styles.buttonText}>жанру</span>
+          {genresCount > 0 && (
+            <span className={styles.badge}>{genresCount}</span>
+          )}
         </button>
         {activeFilter === "genre" && (
           <div className={styles.dropdown}>
             <ul className={styles.dropdownList}>
-              <li
-                className={styles.dropdownItem}
-                onClick={() => handleGenreSelect("")}
-              >
-                Все жанры
-              </li>
               {genres.map((genre) => (
                 <li
                   key={genre}
                   className={cn(styles.dropdownItem, {
-                    [styles.selected]: selectedGenre === genre,
+                    [styles.selected]: selectedGenres.includes(genre),
                   })}
-                  onClick={() => handleGenreSelect(genre)}
+                  onClick={() => handleGenreToggle(genre)}
                 >
                   {genre}
                 </li>

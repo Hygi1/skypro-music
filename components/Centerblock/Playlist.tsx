@@ -13,6 +13,7 @@ import { Track } from "@/lib/types/api";
 import Link from "next/link";
 import styles from "./Playlist.module.css";
 import cn from "classnames";
+import { showWarning, showError } from "@/lib/toast";
 
 const formatTime = (seconds: number) => {
   const mins = Math.floor(seconds / 60);
@@ -21,7 +22,7 @@ const formatTime = (seconds: number) => {
 };
 
 interface PlaylistProps {
-  tracks?: Track[];
+  tracks: Track[];
 }
 
 export default function Playlist({ tracks: propTracks }: PlaylistProps) {
@@ -57,7 +58,7 @@ export default function Playlist({ tracks: propTracks }: PlaylistProps) {
     async (track: Track, e: React.MouseEvent) => {
       e.stopPropagation();
       if (!isAuthenticated) {
-        alert("Войдите, чтобы ставить лайки");
+        showWarning("Войдите, чтобы ставить лайки");
         return;
       }
       try {
@@ -83,8 +84,10 @@ export default function Playlist({ tracks: propTracks }: PlaylistProps) {
           );
           dispatch(setPlaylist(updatedPlaylist));
         }
-      } catch (err: any) {
-        alert(err.message || "Ошибка при изменении лайка");
+      } catch (err) {
+        const message =
+          err instanceof Error ? err.message : "Ошибка при изменении лайка";
+        showError(message);
       }
     },
     [isAuthenticated, userId, playlist, dispatch, isTrackLiked]
@@ -93,13 +96,10 @@ export default function Playlist({ tracks: propTracks }: PlaylistProps) {
   const handleTrackClick = useCallback(
     (index: number) => {
       if (!playlist.length) return;
-      if (propTracks) {
-        dispatch(setPlaylist(propTracks));
-      }
       dispatch(setCurrentTrack({ track: playlist[index], index }));
       dispatch(setPlaying(true));
     },
-    [playlist, propTracks, dispatch]
+    [playlist, dispatch]
   );
 
   const renderedTracks = useMemo(() => {

@@ -1,10 +1,9 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 import { RootState } from "@/lib/store/store";
-import { getFavoriteTracks } from "@/lib/api/catalog";
 import { Track } from "@/lib/types/api";
 import Centerblock from "@/components/Centerblock/Centerblock";
 
@@ -13,32 +12,57 @@ export default function FavoritesPage() {
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated
   );
-  const [tracks, setTracks] = useState<Track[]>([]);
+  const userId = useSelector((state: RootState) => state.auth.user?._id);
+  const reduxPlaylist = useSelector(
+    (state: RootState) => state.player.playlist
+  );
+  const [favorites, setFavorites] = useState<Track[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-
-  const fetchFavorites = useCallback(async () => {
-    try {
-      const data = await getFavoriteTracks();
-      setTracks(data || []);
-    } catch (err: any) {
-      setError(err.message || "Не удалось загрузить избранное");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
 
   useEffect(() => {
     if (!isAuthenticated) {
       router.push("/signin");
       return;
     }
-    fetchFavorites();
-  }, [isAuthenticated, router, fetchFavorites]);
+    if (reduxPlaylist && reduxPlaylist.length > 0 && userId) {
+      const favs = reduxPlaylist.filter((track) =>
+        track.staredUser?.includes(userId)
+      );
+      setFavorites(favs);
+      setLoading(false);
+    } else {
+      const fetchFavorites = async () => {
+        try {
+          const response = await fetch(
+            "https://webdev-music-003b5b991590.herokuapp.com/catalog/track/favorite/all/",
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+              },
+            }
+          );
+          const data = await response.json();
+          setFavorites(data || []);
+        } catch (err: any) {
+          console.error(err);
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchFavorites();
+    }
+  }, [isAuthenticated, router, userId, reduxPlaylist]);
+
+  useEffect(() => {
+    if (reduxPlaylist && reduxPlaylist.length > 0 && userId) {
+      const favs = reduxPlaylist.filter((track) =>
+        track.staredUser?.includes(userId)
+      );
+      setFavorites(favs);
+    }
+  }, [reduxPlaylist, userId]);
 
   if (loading) return <div>Загрузка избранного...</div>;
-  if (error)
-    return <div style={{ color: "red", padding: "20px" }}>Ошибка: {error}</div>;
 
-  return <Centerblock tracks={tracks} title="Избранные треки" />;
+  return <Centerblock tracks={favorites} title="Мои треки" />;
 }

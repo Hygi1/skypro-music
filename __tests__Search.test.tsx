@@ -8,3 +8,10 @@ test("Search calls setSearchQuery on input change", () => {
   fireEvent.change(input, { target: { value: "Chase" } });
   expect(mockSetSearch).toHaveBeenCalledWith("Chase");
 });
+
+test("Search displays the correct value", () => {
+  const mockSetSearch = jest.fn();
+  render(<Search searchQuery="Test" setSearchQuery={mockSetSearch} />);
+  const input = screen.getByPlaceholderText("Поиск") as HTMLInputElement;
+  expect(input.value).toBe("Test");
+});

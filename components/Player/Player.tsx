@@ -134,8 +134,10 @@ export default function Player() {
         );
         dispatch(setPlaylist(updatedPlaylist));
       }
-    } catch (err: any) {
-      alert(err.message || "Ошибка при изменении лайка");
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : "Ошибка при изменении лайка";
+      alert(message);
     }
   }, [isAuthenticated, currentTrack, userId, playlist, dispatch, isTrackLiked]);
 
@@ -146,16 +148,7 @@ export default function Player() {
       : null;
 
   if (!currentTrack) {
-    return (
-      <div className={styles.bar}>
-        <div className={styles.barContent}>
-          <div className={styles.barPlayerProgress}></div>
-          <div className={styles.barPlayerBlock}>
-            <div className={styles.barPlayer}></div>
-          </div>
-        </div>
-      </div>
-    );
+    return null;
   }
 
   return (

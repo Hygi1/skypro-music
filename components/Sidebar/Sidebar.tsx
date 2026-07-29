@@ -83,7 +83,7 @@ export default function Sidebar() {
             <Link href="/selection/2" className={styles.link}>
               <Image
                 src="/img/playlist02.png"
-                alt="Плейлист 2"
+                alt="100 танцевальных хитов"
                 width={250}
                 height={150}
                 className={styles.img}
@@ -94,16 +94,11 @@ export default function Sidebar() {
             <Link href="/selection/3" className={styles.link}>
               <Image
                 src="/img/playlist03.png"
-                alt="Плейлист 3"
+                alt="Инди-заряд"
                 width={250}
                 height={150}
                 className={styles.img}
               />
-            </Link>
-          </div>
-          <div className={styles.item}>
-            <Link href="/favorites" className={styles.link}>
-              <div className={styles.favoritesLink}>⭐ Избранное</div>
             </Link>
           </div>
         </div>

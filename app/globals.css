@@ -1,3 +1,6 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 * {
   margin: 0;
   padding: 0;
@@ -38,4 +41,62 @@ body {
   align-items: center;
   justify-content: center;
   background-color: rgba(0, 0, 0, 0.85);
+}
+
+.error-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #181818;
+  padding: 20px;
+}
+
+.error-content {
+  text-align: center;
+  max-width: 500px;
+}
+
+.error-code {
+  font-size: 80px;
+  font-weight: 700;
+  color: #ad61ff;
+  margin-bottom: 10px;
+  line-height: 1;
+}
+
+.error-icon {
+  font-size: 60px;
+  margin-bottom: 20px;
+}
+
+.error-title {
+  font-size: 28px;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 12px;
+}
+
+.error-description {
+  font-size: 16px;
+  color: #a0a0a0;
+  margin-bottom: 30px;
+}
+
+.error-button {
+  display: inline-block;
+  padding: 12px 32px;
+  background-color: #ad61ff;
+  color: #ffffff;
+  border: none;
+  border-radius: 40px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+
+.error-button:hover {
+  background-color: #9a4dff;
 }
