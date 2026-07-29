@@ -20,7 +20,6 @@ import styles from "./Player.module.css";
 import Image from "next/image";
 import Link from "next/link";
 import cn from "classnames";
-import { showWarning, showError } from "@/lib/toast";
 
 export default function Player() {
   const dispatch = useDispatch();
@@ -108,7 +107,7 @@ export default function Player() {
 
   const handleLike = useCallback(async () => {
     if (!isAuthenticated || !currentTrack) {
-      showWarning("Войдите, чтобы ставить лайки");
+      alert("Войдите, чтобы ставить лайки");
       return;
     }
     try {
@@ -138,7 +137,7 @@ export default function Player() {
     } catch (err) {
       const message =
         err instanceof Error ? err.message : "Ошибка при изменении лайка";
-      showError(message);
+      alert(message);
     }
   }, [isAuthenticated, currentTrack, userId, playlist, dispatch, isTrackLiked]);
 
@@ -149,16 +148,7 @@ export default function Player() {
       : null;
 
   if (!currentTrack) {
-    return (
-      <div className={styles.bar}>
-        <div className={styles.barContent}>
-          <div className={styles.barPlayerProgress}></div>
-          <div className={styles.barPlayerBlock}>
-            <div className={styles.barPlayer}></div>
-          </div>
-        </div>
-      </div>
-    );
+    return null;
   }
 
   return (
